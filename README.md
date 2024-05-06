@@ -1,5 +1,6 @@
 # yFiles React Company Ownership Component
 
+[![NPM version](https://img.shields.io/npm/v/@yworks/react-yfiles-company-ownership?style=flat)](https://www.npmjs.org/package/@yworks/react-yfiles-company-ownership)
 
 [![yFiles React Company Ownership Component](https://raw.githubusercontent.com/yWorks/react-yfiles-company-ownership/main/assets/react-company-ownership-hero.png)](https://docs.yworks.com/react-yfiles-company-ownership)
 
