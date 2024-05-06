@@ -1,0 +1,104 @@
+---
+title: Events
+section: 8
+tags: []
+showRightSideBar: false
+---
+import Playground from '../../components/Playground-Company-Ownership.astro'
+import TypeLink from '../../components/TypeLink.astro'
+
+# Events
+
+The <TypeLink type="CompanyOwnership" /> component features events that notify users when an item is either focused,
+selected or hovered over.
+This functionality provides the flexibility to respond to these state changes, allowing for the dynamic updating of
+external information panels, among other possibilities. Note that to optimize performance, it might be necessary to
+cache these functions.
+
+<Playground
+  code={`
+function App() {
+  const onItemSelect = useCallback(
+    (selectedItems: (Entity | Connection)[]) =>
+      console.log(
+        selectedItems.length ? \`selected: \${JSON.stringify(selectedItems[0])}\` : 'nothing selected'
+      ),
+    []
+  )
+
+  const onItemHover = useCallback(
+    (item: Entity | Connection | null) =>
+      item && console.log(\`hovered: \${JSON.stringify(item)}\`),
+    []
+  )
+
+  const onItemFocus = useCallback(
+    (item: Entity | Connection | null) =>
+      item && console.log(\`focused: \${JSON.stringify(item)}\`),
+    []
+  )
+
+  return (
+    <CompanyOwnership
+      data={data}
+      onItemSelect={onItemSelect}
+      onItemHover={onItemHover}
+      onItemFocus={onItemFocus}
+    ></CompanyOwnership>
+  )
+}
+`}
+  data={`{
+  "companies": [
+    {
+      "id": 1,
+      "name": "Family Trust",
+      "type": "Trust",
+      "jurisdiction": "Germany",
+      "taxStatus": "Taxable",
+      "currency": "EUR"
+    },
+    {
+      "id": 2,
+      "name": "Capital",
+      "type": "Branch",
+      "units": "200",
+      "jurisdiction": "US",
+      "taxStatus": "Taxable",
+      "currency": "USD"
+    },
+    {
+      "id": 3,
+      "name": "International Group",
+      "type": "PE_Risk",
+      "jurisdiction": "Italy",
+      "taxStatus": "Taxable",
+      "currency": "EUR",
+      "units": "2.000"
+    }
+  ],
+  "connections": [
+    {
+      "id": 1,
+      "type": "Ownership",
+      "ownership": 0.6,
+      "sourceId": 3,
+      "targetId": 2
+    },
+    {
+      "id": 2,
+      "type": "Ownership",
+      "ownership": 0.2,
+      "sourceId": 1,
+      "targetId": 3
+    },
+    {
+      "id": 3,
+      "type": "Relation",
+      "sourceId": 1,
+      "targetId": 2
+    }
+  ]
+}
+`}
+/>

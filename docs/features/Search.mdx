@@ -1,0 +1,96 @@
+---
+title: Search
+section: 7
+tags: []
+showRightSideBar: false
+---
+import Playground from '../../components/Playground-Company-Ownership.astro'
+import TypeLink from '../../components/TypeLink.astro'
+
+# Search
+
+The <TypeLink type="CompanyOwnership" /> component introduces a search feature which offers a way to focus on specific elements within the chart. By binding
+a needle object or string, items fitting the search criteria are highlighted.
+
+<Playground
+    code={`
+function CompanyOwnershipWrapper() {
+  const { getSearchHits, zoomTo } = useCompanyOwnershipContext()
+  const [searchQuery, setSearchQuery] = useState('')
+  const onSearchEnter = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      zoomTo(getSearchHits())
+    }
+  }
+  return (
+    <>
+      <CompanyOwnership
+        data={data}
+        searchNeedle={searchQuery}
+        onSearch={(item, searchQuery) => {
+          if ('name' in item && item.name) {
+            return item.name.toLowerCase().includes(searchQuery.toLowerCase())
+          }
+          return false
+        }}
+      ></CompanyOwnership>
+
+      <input className="search"
+        type={'search'}
+        placeholder="Search..."
+        style={{ position: 'absolute', top: '10px', left: '10px' }}
+        onChange={event => {
+          setSearchQuery(event.target.value)
+        }}
+        onKeyDown={onSearchEnter}
+      ></input>
+    </>
+  )
+}
+
+function App() {
+return (
+  <CompanyOwnershipProvider>
+    <CompanyOwnershipWrapper></CompanyOwnershipWrapper>
+  </CompanyOwnershipProvider>
+)
+}
+
+`}
+    data={`{
+      "companies": [
+        {
+          "id": 0,
+          "name": "Big Data Group",
+          "type": "Dual Resident"
+        },
+        {
+          "id": 1,
+          "name": "Investment Capital",
+          "type": "Corporation"
+        },
+        {
+          "id": 2,
+          "name": "Capital",
+          "type": "Branch"
+        }
+      ],
+      "connections": [
+        {
+         "type": "Ownership",
+         "ownership": 0.6,
+         "sourceId": 0,
+         "targetId": 2
+        },
+        {
+          "type": "Ownership",
+          "ownership": 0.4,
+          "sourceId": 0,
+          "targetId": 1
+        }
+      ]
+    }`}
+/>
+
+To further tailor the search functionality, developers can customize the process by registering a function to the
+<TypeLink type="CompanyOwnership" member="onSearch"/> event, which returns a boolean value indicating if the search was successful for the given item.

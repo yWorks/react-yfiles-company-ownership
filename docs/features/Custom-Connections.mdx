@@ -1,0 +1,120 @@
+---
+title: Custom Connections
+section: 2
+tags: []
+showRightSideBar: false
+---
+import Playground from '../../components/Playground-Company-Ownership.astro'
+import TypeLink from '../../components/TypeLink.astro'
+
+# Custom Connections
+The <TypeLink type="CompanyOwnership" /> component includes a rendering feature that enables users to customize connection visualizations.
+It grants control over parameters such as stroke, bend smoothing, thickness, and arrow styles.
+
+The rendering process employs an SVG path element, allowing for the utilization of CSS to customize the stroke or
+incorporate transitions by defining a <TypeLink type="ConnectionStyle" member="className"/>. Note that to optimize performance, and depending on the implementation,
+it might be necessary to memoize the rendering function.
+
+The parameter passed to the connection style provider is an object containing
+the connection itself as well as the source and target company items.
+
+<Playground
+  code={`
+function connectionStyleProvider(data: {
+  source: Entity
+  target: Entity
+  connection: Connection
+}): ConnectionStyle {
+  if (data.connection.type === 'Ownership') {
+    return {
+      smoothingLength: 20,
+      thickness: 4,
+      targetArrow: {
+        type: 'triangle',
+        color: '#002642'
+      },
+      className: 'ownership-connection'
+    } satisfies ConnectionStyle
+  } else {
+    return {
+      smoothingLength: 0,
+      thickness: 2,
+      targetArrow: {
+        type: 'diamond',
+        color: '#E59500'
+      },
+      className: 'relation-connection'
+    } satisfies ConnectionStyle
+  }
+}
+
+function App() {
+  return (<CompanyOwnership
+            data={data as CompanyOwnershipData}
+            connectionStyleProvider={connectionStyleProvider}
+          ></CompanyOwnership>)
+}
+`}
+  data={`{
+  "companies": [
+    {
+      "id": 1,
+      "name": "Family Trust",
+      "type": "Trust",
+      "jurisdiction": "Germany",
+      "taxStatus": "Taxable",
+      "currency": "EUR"
+    },
+    {
+      "id": 2,
+      "name": "Capital",
+      "type": "Branch",
+      "units": "200",
+      "jurisdiction": "US",
+      "taxStatus": "Taxable",
+      "currency": "USD"
+    },
+    {
+      "id": 3,
+      "name": "International Group",
+      "type": "PE_Risk",
+      "jurisdiction": "Italy",
+      "taxStatus": "Taxable",
+      "currency": "EUR",
+      "units": "2.000"
+    }
+  ],
+  "connections": [
+    {
+      "id": 1,
+      "type": "Ownership",
+      "ownership": 0.6,
+      "sourceId": 3,
+      "targetId": 2
+    },
+    {
+      "id": 2,
+      "type": "Ownership",
+      "ownership": 0.2,
+      "sourceId": 1,
+      "targetId": 3
+    },
+    {
+      "id": 3,
+      "type": "Relation",
+      "sourceId": 1,
+      "targetId": 2
+    }
+  ]
+}
+`}
+  css={`
+      .ownership-connection {
+          color: #002642;
+      }
+      .relation-connection {
+          color: #E59500;
+          stroke-dasharray: 2, 2;
+      }
+`}
+/>

@@ -1,0 +1,107 @@
+---
+title: Tooltips
+section: 4
+tags: []
+showRightSideBar: false
+---
+import Playground from '../../components/Playground-Company-Ownership.astro'
+import TypeLink from '../../components/TypeLink.astro'
+
+# Tooltips
+
+Tooltips display specific information when hovering over an item. Configure the tooltip by setting a custom React component in the <TypeLink type="CompanyOwnership" member="renderTooltip"/> prop.
+The <TypeLink type="CompanyOwnership" /> component provides a default tooltip that displays the name of the item and a data-grid of key-value pairs:
+
+```tsx
+function CompanyOwnership () {
+  return (
+    <CompanyOwnership
+      data={data}
+      renderTooltip={RenderCompanyOwnershipTooltip}>
+    </CompanyOwnership>
+  )
+}
+```
+
+You can also specify custom React components to render the tooltips according to your specific requirements:
+
+<Playground
+  code={`
+function MyTooltipComponent({
+data
+}: RenderTooltipProps<Entity | Connection>) {
+  let tooltip = ""
+  if ('sourceId' in data && 'targetId' in data && data.sourceId && data.targetId) {
+    tooltip = \`Connection from \${data.sourceId} to \${data.targetId}\`;
+  } else if ('name' in data) {
+    tooltip = \`\${data.name}\`;
+  }
+
+  return (
+    <div style={{ backgroundColor: 'tomato', padding: 5, borderRadius: 10, color: 'white' }}>
+      {tooltip}
+    </div>
+  )
+}
+
+function App () {
+  return <CompanyOwnership data={data} renderTooltip={MyTooltipComponent}></CompanyOwnership>
+}
+`}
+  data={`{
+  "companies": [
+    {
+      "id": 1,
+      "name": "Family Trust",
+      "type": "Trust",
+      "jurisdiction": "Germany",
+      "taxStatus": "Taxable",
+      "currency": "EUR"
+    },
+    {
+      "id": 2,
+      "name": "Capital",
+      "type": "Branch",
+      "units": "200",
+      "jurisdiction": "US",
+      "taxStatus": "Taxable",
+      "currency": "USD"
+    },
+    {
+      "id": 3,
+      "name": "International Group",
+      "type": "PE_Risk",
+      "jurisdiction": "Italy",
+      "taxStatus": "Taxable",
+      "currency": "EUR",
+      "units": "2.000"
+    }
+  ],
+  "connections": [
+    {
+      "id": 1,
+      "type": "Ownership",
+      "ownership": 0.6,
+      "sourceId": 3,
+      "targetId": 2
+    },
+    {
+      "id": 2,
+      "type": "Ownership",
+      "ownership": 0.2,
+      "sourceId": 1,
+      "targetId": 3
+    },
+    {
+      "id": 3,
+      "type": "Relation",
+      "sourceId": 1,
+      "targetId": 2
+    }
+  ]
+}
+`}
+/>
+
+
+

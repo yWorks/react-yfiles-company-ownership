@@ -1,0 +1,84 @@
+---
+title: Connection Labels
+section: 3
+tags: []
+showRightSideBar: false
+---
+import Playground from '../../components/Playground-Company-Ownership.astro'
+import TypeLink from '../../components/TypeLink.astro'
+
+# Connection Labels
+With the <TypeLink type="CompanyOwnership" member="connectionLabelProvider"/> specific data can be visualized for each
+connection.
+
+The provider is called for each <TypeLink type="Connection"/> and should return a <TypeLink type="SimpleLabel" />
+if a label should be shown on the connection. If the connection should not show a label, `undefined` may be returned.
+
+<Playground
+  code={`
+function connectionLabelProvider(item: Connection): SimpleLabel | undefined {
+  return {
+    text: \`From: \${item.sourceId}\\n To: \${item.targetId}\`,
+    labelShape: 'round-rectangle',
+    className: 'default-connection-label'
+  } satisfies SimpleLabel
+}
+
+function App() {
+  return <CompanyOwnership data={data} connectionLabelProvider={connectionLabelProvider}></CompanyOwnership>
+}
+`}
+  data={`{
+  "companies": [
+    {
+      "id": 1,
+      "name": "Family Trust",
+      "type": "Trust",
+      "jurisdiction": "Germany",
+      "taxStatus": "Taxable",
+      "currency": "EUR"
+    },
+    {
+      "id": 2,
+      "name": "Capital",
+      "type": "Branch",
+      "units": "200",
+      "jurisdiction": "US",
+      "taxStatus": "Taxable",
+      "currency": "USD"
+    },
+    {
+      "id": 3,
+      "name": "International Group",
+      "type": "PE_Risk",
+      "jurisdiction": "Italy",
+      "taxStatus": "Taxable",
+      "currency": "EUR",
+      "units": "2.000"
+    }
+  ],
+  "connections": [
+    {
+      "id": 1,
+      "type": "Ownership",
+      "ownership": 0.6,
+      "sourceId": 3,
+      "targetId": 2
+    },
+    {
+      "id": 2,
+      "type": "Ownership",
+      "ownership": 0.2,
+      "sourceId": 1,
+      "targetId": 3
+    },
+    {
+      "id": 3,
+      "type": "Relation",
+      "sourceId": 1,
+      "targetId": 2
+    }
+  ]
+}
+`}
+/>

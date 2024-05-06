@@ -1,0 +1,441 @@
+---
+title: Custom Items
+section: 1
+tags: []
+showRightSideBar: false
+---
+import Playground from '../../components/Playground-Company-Ownership.astro'
+import TypeLink from '../../components/TypeLink.astro'
+
+# Customizing Items
+
+## Default visualizations
+
+This component comes with styling and options suitable for general company ownership graphs.
+The items in the <TypeLink type="CompanyOwnership" member="data"/> array must satisfy the <TypeLink type="Entity" /> type:
+
+```ts
+type EntityId = string | number
+
+type EntityType =
+  | 'Asset'
+  | 'Bank'
+  | 'Branch'
+  | 'CTB'
+  | 'Corporation'
+  | 'Disregarded'
+  | 'Dual Resident'
+  | 'Individual'
+  | 'Multiple'
+  | 'Octagon'
+  | 'PE_Risk'
+  | 'Partnership'
+  | 'RCTB'
+  | 'Third Party'
+  | 'Trapezoid'
+  | 'Trust'
+  | 'Unknown'
+
+export interface Entity {
+  id: EntityId
+  type?: EntityType
+  width?: number
+  height?: number
+  name?: string
+  className?: string
+  style?: CSSProperties
+}
+```
+
+The optional <TypeLink type="Entity" member="width"/> and <TypeLink type="Entity" member="height" /> define the render size of the item. If no values are given, the size is determined automatically.
+
+There are _two_ node visualizations available out-of-the-box: The "standard" nodes with coloring and shapes for each entity type
+and a rectangular tabular React node style. The default is the "standard" node style.
+To use the tabular node style, you need to set the <TypeLink type="RenderEntity"/> on the <TypeLink type="CompanyOwnership" member="renderEntity"/>
+component property:
+
+```ts
+import {
+  CompanyOwnership,
+  CompanyOwnershipData,
+  RenderEntity
+} from '@yworks/react-yfiles-company-ownership'
+import data from '../../data/company-data.json'
+
+export default () => (
+  <CompanyOwnership
+    data={data as CompanyOwnershipData}
+    renderEntity={RenderEntity}
+  ></CompanyOwnership>
+)
+
+```
+
+
+## Custom items
+
+The visualization of items is highly customizable. You can specify custom React components to render the items according
+to your specific requirements. Note that to optimize performance and depending on the implementation, it might be necessary
+to use memoization for custom visualization components.
+
+<Playground
+  code={`
+  function CustomEntityComponent(props: RenderEntityProps<Entity>) {
+    const item = props.dataItem as Entity & { currency?: string; jurisdiction: string }
+    return (
+      <div className="company-ownership-item">
+        {props.detail === 'high' ? (
+          <div className="company-ownership-item-content">
+            <div className="type-text">{item.type}</div>
+            <div className="name-text">{item.name}</div>
+            <div className="details-text">
+              {item.jurisdiction} {item.currency ? ' / ' + item.currency : ''}
+            </div>
+          </div>
+        ) : (
+          <div className="company-ownership-item-content-low-detail">
+            <div className="name-text-low-detail">{item.name}</div>
+          </div>
+        )}
+      </div>
+    )
+  }
+
+
+  function App () {
+    return (
+      <CompanyOwnership
+        data={data as CompanyOwnershipData}
+        renderEntity={CustomEntityComponent}
+        itemSize={{ width: 200, height: 120 }}
+      ></CompanyOwnership>
+    )
+  }
+`}
+  data={`{
+  "companies": [
+    {
+      "id": 0,
+      "name": "Big Data Group",
+      "type": "Dual Resident",
+      "units": "500.000",
+      "jurisdiction": "UK/EU",
+      "taxStatus": "Taxable",
+      "currency": "GBP/EUR"
+    },
+    {
+      "id": 1,
+      "name": "Investment Capital",
+      "type": "Corporation",
+      "units": "100.000",
+      "jurisdiction": "US",
+      "taxStatus": "Taxable",
+      "currency": "USD"
+    },
+    {
+      "id": 2,
+      "name": "Capital",
+      "type": "Branch",
+      "units": "200",
+      "jurisdiction": "US",
+      "taxStatus": "Taxable",
+      "currency": "USD"
+    },
+    {
+      "id": 3,
+      "name": "Connect Partner",
+      "jurisdiction": "UK",
+      "type": "RCTB",
+      "taxStatus": "Pass through",
+      "currency": "GBP",
+      "units": "50"
+    },
+    {
+      "id": 4,
+      "name": "Monster Inc",
+      "type": "Corporation",
+      "jurisdiction": "Germany",
+      "taxStatus": "Taxable",
+      "currency": "EUR",
+      "units": "800.000"
+    },
+    {
+      "id": 5,
+      "name": "Micro Group",
+      "type": "Trust",
+      "jurisdiction": "Spain",
+      "taxStatus": "Taxable",
+      "currency": "EUR"
+    },
+    {
+      "id": 6,
+      "name": "Anon Investment",
+      "type": "Third Party",
+      "jurisdiction": "US",
+      "taxStatus": "Taxable",
+      "currency": "USD"
+    },
+    {
+      "id": 7,
+      "name": "Eric Joplin",
+      "type": "Individual",
+      "jurisdiction": "US"
+    },
+    {
+      "id": 8,
+      "name": "Melissa Barner",
+      "type": "Individual",
+      "jurisdiction": "Germany"
+    },
+    {
+      "id": 9,
+      "name": "International Group",
+      "type": "PE_Risk",
+      "jurisdiction": "Italy",
+      "taxStatus": "Taxable",
+      "currency": "EUR",
+      "units": "2.000"
+    },
+    {
+      "id": 10,
+      "name": "Limited Trust",
+      "type": "Trust",
+      "jurisdiction": "US",
+      "taxStatus": "Taxable",
+      "currency": "USD"
+    },
+    {
+      "id": 11,
+      "name": "Large Scale Trust",
+      "type": "Trust",
+      "jurisdiction": "UK",
+      "taxStatus": "Taxable",
+      "currency": "GBP"
+    },
+    {
+      "id": 12,
+      "name": "Investment Group Inc",
+      "type": "Corporation",
+      "jurisdiction": "India",
+      "taxStatus": "Taxable",
+      "currency": "INR",
+      "units": "200.000"
+    },
+    {
+      "id": 13,
+      "name": "Service Group Inc",
+      "type": "Corporation",
+      "jurisdiction": "Mexico",
+      "taxStatus": "Taxable",
+      "currency": "MXN",
+      "units": "3.000"
+    },
+    {
+      "id": 15,
+      "name": "Family Trust",
+      "type": "Trust",
+      "jurisdiction": "Germany",
+      "taxStatus": "Taxable",
+      "currency": "EUR"
+    }
+  ],
+  "connections": [
+    {
+      "id": 1,
+      "type": "Ownership",
+      "ownership": 0.6,
+      "sourceId": 0,
+      "targetId": 2
+    },
+    {
+      "id": 2,
+      "type": "Ownership",
+      "ownership": 0.4,
+      "sourceId": 0,
+      "targetId": 1
+    },
+    {
+      "id": 3,
+      "type": "Ownership",
+      "ownership": 0.7,
+      "sourceId": 1,
+      "targetId": 3
+    },
+    {
+      "id": 4,
+      "type": "Ownership",
+      "ownership": 0.6,
+      "sourceId": 2,
+      "targetId": 3
+    },
+    {
+      "id": 5,
+      "type": "Ownership",
+      "ownership": 0.4,
+      "sourceId": 4,
+      "targetId": 0
+    },
+    {
+      "id": 6,
+      "type": "Ownership",
+      "ownership": 0.4,
+      "sourceId": 5,
+      "targetId": 1
+    },
+    {
+      "id": 7,
+      "type": "Ownership",
+      "ownership": 0.5,
+      "sourceId": 6,
+      "targetId": 0
+    },
+    {
+      "id": 9,
+      "type": "Relation",
+      "sourceId": 1,
+      "targetId": 2
+    },
+    {
+      "id": 10,
+      "type": "Ownership",
+      "ownership": 0.3,
+      "sourceId": 7,
+      "targetId": 4
+    },
+    {
+      "id": 11,
+      "type": "Ownership",
+      "ownership": 0.3,
+      "sourceId": 8,
+      "targetId": 9
+    },
+    {
+      "id": 12,
+      "type": "Ownership",
+      "ownership": 0.6,
+      "sourceId": 9,
+      "targetId": 2
+    },
+    {
+      "id": 13,
+      "type": "Ownership",
+      "ownership": 0.3,
+      "sourceId": 9,
+      "targetId": 6
+    },
+    {
+      "id": 14,
+      "type": "Ownership",
+      "ownership": 0.5,
+      "sourceId": 9,
+      "targetId": 10
+    },
+    {
+      "id": 15,
+      "type": "Ownership",
+      "ownership": 0.3,
+      "sourceId": 10,
+      "targetId": 2
+    },
+    {
+      "id": 17,
+      "type": "Ownership",
+      "ownership": 0.4,
+      "sourceId": 11,
+      "targetId": 4
+    },
+    {
+      "id": 18,
+      "type": "Ownership",
+      "ownership": 0.4,
+      "sourceId": 3,
+      "targetId": 12
+    },
+    {
+      "id": 19,
+      "type": "Ownership",
+      "ownership": 0.5,
+      "sourceId": 3,
+      "targetId": 13
+    },
+    {
+      "id": 21,
+      "type": "Ownership",
+      "ownership": 0.2,
+      "sourceId": 15,
+      "targetId": 9
+    },
+    {
+      "id": 22,
+      "type": "Relation",
+      "sourceId": 7,
+      "targetId": 6
+    },
+    {
+      "id": 24,
+      "type": "Ownership",
+      "ownership": 0.2,
+      "sourceId": 11,
+      "targetId": 3
+    },
+    {
+      "id": 25,
+      "type": "Ownership",
+      "ownership": 0.2,
+      "sourceId": 8,
+      "targetId": 6
+    },
+    {
+      "id": 27,
+      "type": "Relation",
+      "sourceId": 15,
+      "targetId": 2
+    }
+  ]
+}`}
+  css={`  .company-ownership-item {
+      font-family: sans-serif;
+      height: 100%;
+      background-color: white;
+      border-radius: 5px;
+  }
+
+  .company-ownership-item-content {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      padding: 10px;
+  }
+
+  .company-ownership-item-content-low-detail {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin: 10px;
+      height: 100%
+  }
+
+  .type-text {
+      font-size: small;
+      color: black;
+  }
+
+  .name-text {
+      font-size: large;
+      font-weight: bolder;
+      color: black;
+  }
+
+  .name-text-low-detail {
+      font-size: xx-large;
+      font-weight: bold;
+      color: black;
+  }
+
+  .details-text {
+      font-size: smaller;
+      color: darkgrey;
+  }
+`}
+/>

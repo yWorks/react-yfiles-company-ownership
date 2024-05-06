@@ -1,0 +1,85 @@
+.company-node-bank {
+    fill: #c89c9c;
+    background-color: #c89c9c;
+    stroke: #9c3737;
+}
+.company-node-corporation {
+    fill: #ffc499;
+    background-color: #ffc499;
+    stroke: #ff6c00;
+}
+.company-node-ctp {
+    fill: #a7a7c1;
+    background-color: #a7a7c1;
+    stroke: #242265;
+}
+.company-node-partnership {
+    fill: #bbd3c5;
+    background-color: #bbd3c5;
+    stroke: #56926e;
+}
+.company-node-rctb {
+    fill: #c5e4d1;
+    background-color: #c5e4d1;
+    stroke: #6dbc8d;
+}
+.company-node-branch {
+    fill: #c4b9c9;
+    background-color: #c4b9c9;
+    stroke: #6c4f77;
+}
+.company-node-disregarded {
+    fill: #b3cddb;
+    background-color: #b3cddb;
+    stroke: #4281a4;
+}
+.company-node-dual-resident {
+    fill: #f3f3b9;
+    background-color: #f3f3b9;
+    stroke: #e0e04f;
+}
+.company-node-multiple {
+    fill: #e6e6e6;
+    background-color: #e6e6e6;
+    stroke: #c1c1c1;
+}
+.company-node-trust {
+    fill: #f1b0ae;
+    background-color: #f1b0ae;
+    stroke: #db3a34;
+}
+.company-node-individual {
+    fill: #f9e99c;
+    background-color: #f9e99c;
+    stroke: #f0c808;
+}
+.company-node-third-party {
+    fill: #abb8b0;
+    background-color: #abb8b0;
+    stroke: #2d4d3a;
+}
+.company-node-pe-risk {
+    fill: #dda7b5;
+    background-color: #dda7b5;
+    stroke: #ab2346;
+}
+.company-node-asset {
+    fill: #dfb5ff;
+    background-color: #dfb5ff;
+    stroke: #58198a;
+}
+.company-node-octagon {
+    fill: #90b9d6;
+    background-color: #90b9d6;
+    stroke: #1b5270;
+}
+.company-node-trapezoid {
+    fill: #c8dfb3;
+    background-color: #c8dfb3;
+    stroke: #76b041;
+}
+.company-node-unknown {
+    fill: #fff;
+    background-color: #fff;
+    stroke: #000;
+}

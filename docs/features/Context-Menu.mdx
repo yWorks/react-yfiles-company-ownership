@@ -1,0 +1,91 @@
+---
+title: Context Menu
+section: 5
+tags: []
+showRightSideBar: false
+---
+import Playground from '../../components/Playground-Company-Ownership.astro'
+import TypeLink from '../../components/TypeLink.astro'
+
+# Context Menu
+The context menu provides context-specific actions for items.
+Set the <TypeLink type="CompanyOwnership" member="contextMenuItems"/> to populate the context menu with actions.
+The <TypeLink type="CompanyOwnership" /> component introduces a default context menu which provides actions to interact with the chart.
+
+```tsx
+function CompanyOwnershipChart() {
+  return (
+    <CompanyOwnership data={data} contextMenuItems={DefaultContextMenuItems}></CompanyOwnership>
+  )
+}
+```
+
+To adjust the context menu visualization, add a custom React component using the <TypeLink type="CompanyOwnership" member="renderContextMenu"/> prop.
+
+<Playground
+  code={`
+    function App() {
+      return (
+        <CompanyOwnership
+          data={data}
+          renderContextMenu={({item}) => item?.name && (
+           <button onClick={() => alert(\`\${item.name} clicked!\`)}>Click here!</button>
+          )}
+        ></CompanyOwnership>
+      )
+    }`
+  }
+  data={`{
+  "companies": [
+    {
+      "id": 1,
+      "name": "Family Trust",
+      "type": "Trust",
+      "jurisdiction": "Germany",
+      "taxStatus": "Taxable",
+      "currency": "EUR"
+    },
+    {
+      "id": 2,
+      "name": "Capital",
+      "type": "Branch",
+      "units": "200",
+      "jurisdiction": "US",
+      "taxStatus": "Taxable",
+      "currency": "USD"
+    },
+    {
+      "id": 3,
+      "name": "International Group",
+      "type": "PE_Risk",
+      "jurisdiction": "Italy",
+      "taxStatus": "Taxable",
+      "currency": "EUR",
+      "units": "2.000"
+    }
+  ],
+  "connections": [
+    {
+      "id": 1,
+      "type": "Ownership",
+      "ownership": 0.6,
+      "sourceId": 3,
+      "targetId": 2
+    },
+    {
+      "id": 2,
+      "type": "Ownership",
+      "ownership": 0.2,
+      "sourceId": 1,
+      "targetId": 3
+    },
+    {
+      "id": 3,
+      "type": "Relation",
+      "sourceId": 1,
+      "targetId": 2
+    }
+  ]
+}
+`}
+/>

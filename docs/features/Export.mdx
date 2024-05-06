@@ -1,0 +1,127 @@
+---
+title: Export Capabilities
+section: 11
+tags: []
+showRightSideBar: false
+---
+import Playground from '../../components/Playground-Company-Ownership.astro'
+import TypeLink from '../../components/TypeLink.astro'
+
+# Export Capabilities
+
+The component allows users to export either the entire diagram or a specific part of it in SVG or PNG format.
+Furthermore, it incorporates a print function that leverages the browser's capabilities, enabling users to generate
+hard copies or save the diagram as PDF for offline access.
+
+Access to the corresponding export functions is provided through the <TypeLink type="useCompanyOwnershipContext" /> hook described in
+[Hook & CompanyOwnershipProvider.](hook-companyownershipprovider)
+
+<Playground
+  code={`
+function CompanyOwnershipWrapper() {
+  const { exportToSvg, exportToPng, print } = useCompanyOwnershipContext()
+
+  return (
+    <>
+      <CompanyOwnership data={data}></CompanyOwnership>
+      <div className="export-toolbar">
+        <button className="toolbar-button" onClick={async () => await print({ scale: 2 })}>Print</button>
+        <button className="toolbar-button" onClick={async () => await exportToSvg({ scale: 2 })}>Export to SVG</button>
+        <button className="toolbar-button" onClick={async () => await exportToPng({ scale: 2 })}>Export to PNG</button>
+      </div>
+    </>
+  )
+}
+
+function App() {
+  return (
+    <CompanyOwnershipProvider>
+      <CompanyOwnershipWrapper></CompanyOwnershipWrapper>
+    </CompanyOwnershipProvider>
+  )
+}
+`}
+  data={`{
+  "companies": [
+    {
+      "id": 1,
+      "name": "Family Trust",
+      "type": "Trust",
+      "jurisdiction": "Germany",
+      "taxStatus": "Taxable",
+      "currency": "EUR"
+    },
+    {
+      "id": 2,
+      "name": "Capital",
+      "type": "Branch",
+      "units": "200",
+      "jurisdiction": "US",
+      "taxStatus": "Taxable",
+      "currency": "USD"
+    },
+    {
+      "id": 3,
+      "name": "International Group",
+      "type": "PE_Risk",
+      "jurisdiction": "Italy",
+      "taxStatus": "Taxable",
+      "currency": "EUR",
+      "units": "2.000"
+    }
+  ],
+  "connections": [
+    {
+      "id": 1,
+      "type": "Ownership",
+      "ownership": 0.6,
+      "sourceId": 3,
+      "targetId": 2
+    },
+    {
+      "id": 2,
+      "type": "Ownership",
+      "ownership": 0.2,
+      "sourceId": 1,
+      "targetId": 3
+    },
+    {
+      "id": 3,
+      "type": "Relation",
+      "sourceId": 1,
+      "targetId": 2
+    }
+  ]
+}
+`}
+  css={`
+        .export-toolbar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #393939;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+          .export-toolbar .toolbar-button {
+              outline: none;
+              border: none;
+              background-color: #393939;
+              color: white;
+              cursor: pointer;
+              transition:
+                      background-color 0.3s ease 0s,
+                      border-color 0.3s ease 0s;
+              font-size: 16px;
+              padding: 0.5rem 1.2rem 0.5rem 0.8rem;
+              border-radius: 10px;
+          }
+
+          .export-toolbar .toolbar-button:hover {
+              background-color: #2b2b2b;
+          }
+
+`
+  }
+/>

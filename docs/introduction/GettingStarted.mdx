@@ -1,0 +1,109 @@
+---
+title: Getting Started
+section: 1
+tags: []
+---
+import TypeLink from '../../components/TypeLink.astro'
+
+# Getting Started
+
+## Prerequisites
+
+For using the component, [yFiles for HTML](https://www.yworks.com/products/yfiles-for-html) is required. You can evaluate yFiles for 60 days free of charge on [my.yworks.com](https://my.yworks.com/signup?product=YFILES_HTML_EVAL). See [Licensing](licensing) for more information on this topic.
+
+## Project setup
+
+1. **Installation:**
+   Install the component via npm by running the following command in your project directory:
+   ```bash
+   npm install @yworks/react-yfiles-company-ownership
+      ```
+ 
+   The company-ownership module has some peer dependencies that must be installed somewhere in your project. Since it is a React module, `react` and `react-dom` dependencies are needed.
+ 
+   Additionally, the component relies on the [yFiles](https://www.yworks.com/yfiles-overview) library which is not published to the public npm registry. You can learn  how to work with the yFiles npm module in our [Developer's Guide](https://docs.yworks.com/yfileshtml/#/dguide/yfiles_npm_module).
+ 
+   Ensure that the dependencies in the `package.json` file resemble the following:
+   ```json
+   {
+     ...
+     "dependencies": {
+       "@yworks/react-yfiles-company-ownership": "^1.0.0",
+       "react": "^18.2.0",
+       "react-dom": "^18.2.0",
+       "yfiles": "<yFiles package path>/lib/yfiles-26.0.0.tgz",
+       ...
+     }
+   }
+   ```
+
+2. **License:**
+   Be sure to invoke the <TypeLink type="registerLicense" /> function to activate the license for the application before using the company-ownership component.
+
+3. **Usage:**
+   Utilize the component in your application. Make sure to import the CSS stylesheet.
+ 
+   ```tsx
+   import {
+     CompanyOwnership,
+     CompanyOwnershipData,
+     Entity,
+     Ownership,
+     registerLicense
+   } from '@yworks/react-yfiles-company-ownership'
+
+   import '@yworks/react-yfiles-company-ownership/dist/index.css'
+ 
+   import yFilesLicense from './license.json'
+ 
+   function App() {
+     registerLicense(yFilesLicense)
+ 
+     const data: CompanyOwnershipData<Entity, Ownership> = {
+       companies: [
+         {
+           id: 1,
+           name: 'Monster Inc',
+           type: 'Corporation'
+         },
+         {
+           id: 2,
+           name: 'Connect Partner',
+           type: 'RCTB'
+         },
+         {
+           id: 3,
+           name: 'Large Scale Trust',
+           type: 'Trust'
+         }
+       ],
+       connections: [
+         {
+           type: 'Ownership',
+           ownership: 0.4,
+           sourceId: 1,
+           targetId: 2
+         },
+         {
+           type: 'Ownership',
+           ownership: 0.2,
+           sourceId: 1,
+           targetId: 3
+         }
+       ]
+     }
+ 
+     return  <CompanyOwnership data={data}></CompanyOwnership>
+   }
+ 
+   export default App
+   ```
+ 
+   > **Note:** By default, the <TypeLink type="CompanyOwnership" /> component adjusts its size to match the size of its parent element. Therefore, it is necessary to set the dimensions of the containing element or apply styling directly to the `CompanyOwnership` component. This can be achieved by defining a CSS class or applying inline styles.
+
+## Learn More
+
+Explore the possibilities of visualizing company ownership diagrams with the yFiles Company Ownership Component. For further information about [yFiles for HTML](https://www.yworks.com/yfiles-overview) and our company, please visit [yWorks.com](https://www.yworks.com).
+
+For support or feedback, please reach out to [our support team](https://website.yworks.home/contact) or open an issue on GitHub. Happy diagramming!
+

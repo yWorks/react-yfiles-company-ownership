@@ -1,0 +1,64 @@
+.company-ownership-item {
+    font-family: sans-serif;
+    height: 100%;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.company-ownership-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    padding: 10px;
+}
+
+.company-ownership-item-content-low-detail {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 10px;
+    height: 100%
+}
+
+.company-icon {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    color: darkgrey;
+}
+
+.flag-icon {
+    width: 30px;
+    height: 20px;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+}
+
+.flag-icon-dual {
+    width: 65px;
+    height: 20px;
+    position: absolute;
+    right: 5px;
+    bottom: 5px;
+}
+
+.type-text {
+    font-size: small;
+}
+
+.name-text {
+    font-size: large;
+    font-weight: bolder;
+}
+
+.name-text-low-detail {
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+.details-text {
+    font-size: smaller;
+}
+
