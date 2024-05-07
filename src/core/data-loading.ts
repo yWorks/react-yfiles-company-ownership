@@ -228,7 +228,7 @@ export function convertToDefaultLabelStyle(
 ): DefaultLabelStyle {
   return new DefaultLabelStyle({
     textFill: 'currentColor',
-    backgroundFill: 'currentColor',
+    backgroundFill: '#ffffff',
     shape: label.labelShape ?? 'round-rectangle',
     cssClass: `${cssClass} ${label.className ?? ''}`,
     insets: 5
