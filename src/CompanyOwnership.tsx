@@ -461,6 +461,26 @@ function checkStylesLoaded(root: HTMLElement | null) {
   dummy.remove()
 }
 
+const licenseErrorCodeSample = `import {CompanyOwnership, registerLicense} from '@yworks/react-yfiles-company-ownership' 
+import '@yworks/react-yfiles-company-ownership/dist/index.css'
+import yFilesLicense from './license.json'
+
+function App() {
+  registerLicense(yFilesLicense)
+            
+  const data = {
+    "companies": [
+      { "id": 0, "name": "Big Data Group" },
+      { "id": 1, "name": "Investment Capital" }
+    ],
+    "connections": [
+      { "sourceId": 0, "targetId": 1 }
+    ]
+  }
+
+  return <CompanyOwnership data={data}></CompanyOwnership>
+}`
+
 /**
  * The CompanyOwnership component visualizes the given data as a company ownership chart.
  * All data items have to be included in the [data]{@link CompanyOwnershipProps.data}.
@@ -479,7 +499,12 @@ export function CompanyOwnership<
   TNeedle = string
 >(props: CompanyOwnershipProps<TEntity, TConnection, TNeedle> & PropsWithChildren) {
   if (!checkLicense()) {
-    return <LicenseError />
+    return (
+      <LicenseError
+        componentName={'yFiles React Company Ownership Component'}
+        codeSample={licenseErrorCodeSample}
+      />
+    )
   }
 
   const isWrapped = useCompanyOwnershipContextInternal()
