@@ -12,12 +12,12 @@ for displaying company ownership charts in your React applications.
 
 ### Prerequisites
 
-   To use the Company Ownership component, [yFiles for HTML](https://www.yworks.com/products/yfiles-for-html) is required. 
-   You can evaluate yFiles for 60 days free of charge on [my.yworks.com](https://my.yworks.com/signup?product=YFILES_HTML_EVAL). 
-   See [Licensing](https://docs.yworks.com/react-yfiles-company-ownership/introduction/licensing) for more information on this topic.
+To use the Company Ownership component, [yFiles for HTML](https://www.yworks.com/products/yfiles-for-html) is required.
+You can evaluate yFiles for 60 days free of charge on [my.yworks.com](https://my.yworks.com/signup?product=YFILES_HTML_EVAL).
+See [Licensing](https://docs.yworks.com/react-yfiles-company-ownership/introduction/licensing) for more information on this topic.
 
-   A convenient way of getting access to yFiles is to use the [yFiles Dev Suite](https://www.npmjs.com/package/yfiles-dev-suite). 
-   You can learn how to work with the yFiles npm module in our [Developer’s Guide](https://docs.yworks.com/yfileshtml/#/dguide/yfiles_npm_module).
+You can learn how to work with the yFiles npm module in our [Developer’s Guide](https://docs.yworks.com/yfileshtml/#/dguide/yfiles_npm_module). A convenient way of getting access to yFiles is to use the [yFiles Dev Suite](https://www.npmjs.com/package/yfiles-dev-suite).
+
 
 ### Project Setup
 
@@ -28,34 +28,43 @@ for displaying company ownership charts in your React applications.
    ```
    npm create vite@latest my-company-ownership-app -- --template react-ts
    ```
-  
+
+   Add the yFiles dependency:
+   ```
+   npm install <yFiles package path>/lib-dev/yfiles-26.0.0+dev.tgz
+   ```
+
    <details>
 
    <summary>Sample <code>package.json</code> dependencies</summary>
+   The resulting package.json dependencies should resemble the following:
 
    ```json
       "dependencies": {
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "yfiles": "./lib/yfiles-26.0.0.tgz"
+        "yfiles": "./lib-dev/yfiles-26.0.0.tgz"
      }
    ```
    </details>
 
-   After the peer dependencies, the component itself can be installed:
+   Now, the component itself can be installed:
    ```bash
    npm install @yworks/react-yfiles-company-ownership
    ```
 
-2. **License:**
-   Be sure to invoke <TypeLink type="registerLicense" /> before using the company-ownership component.
-   In a yFiles for HTML evaluation package, you can find the license JSON file in the `lib/` folder. 
-   For licensed users, the license data is provided separately.   
+2. **License**
+
+   Be sure to invoke <TypeLink type="registerLicense" /> before using the Company Ownership React component.
+   When evaluating yFiles, the license JSON file is found in the `lib/` folder of the yFiles for HTML evaluation package.
+   For licensed users, the license data is provided separately.
 
    <details>
 
    <summary>License registration</summary>
-   
+
+   Import or paste your license data and register the license, e.g. in `App.tsx`:   
+
    ```js
    import yFilesLicense from './license.json'
 
@@ -63,8 +72,18 @@ for displaying company ownership charts in your React applications.
    ```
    </details>
 
-3. **Usage:**
-   Utilize the component in your application. Make sure to import the CSS stylesheet.
+3. **Stylesheet**
+
+   Make sure to import the CSS stylesheet as well:
+
+   ```js
+   import '@yworks/react-yfiles-company-ownership/dist/index.css'
+   ```
+
+4. **Usage**
+
+   You are now all set to utilize the Company Ownership component with your data!
+   See a basic example `App.tsx` below:
 
    ```tsx
    import {
@@ -78,48 +97,49 @@ for displaying company ownership charts in your React applications.
    import '@yworks/react-yfiles-company-ownership/dist/index.css'
    
    import yFilesLicense from './license.json'
- 
-   function App() {
-     registerLicense(yFilesLicense)
- 
-     const data: CompanyOwnershipData<Entity, Ownership> = {
-       companies: [
-         {
-           id: 1,
-           name: 'Monster Inc',
-           type: 'Corporation'
-         },
-         {
-           id: 2,
-           name: 'Connect Partner',
-           type: 'RCTB'
-         },
-         {
-           id: 3,
-           name: 'Large Scale Trust',
-           type: 'Trust'
-         }
-       ],
-       connections: [
-         {
-           type: 'Ownership',
-           ownership: 0.4,
-           sourceId: 1,
-           targetId: 2
-         },
-         {
-           type: 'Ownership',
-           ownership: 0.2,
-           sourceId: 1,
-           targetId: 3
-         }
-       ]
-     }
- 
-     return  <CompanyOwnership data={data}></CompanyOwnership>
+   
+   registerLicense(yFilesLicense)
+   
+   const data: CompanyOwnershipData<Entity, Ownership> = {
+     companies: [
+       {
+         id: 1,
+         name: 'Monster Inc',
+         type: 'Corporation'
+       },
+       {
+         id: 2,
+         name: 'Connect Partner',
+         type: 'RCTB'
+       },
+       {
+         id: 3,
+         name: 'Large Scale Trust',
+         type: 'Trust'
+       }
+     ],
+     connections: [
+       {
+         type: 'Ownership',
+         ownership: 0.4,
+         sourceId: 1,
+         targetId: 2
+       },
+       {
+         type: 'Ownership',
+         ownership: 0.2,
+         sourceId: 1,
+         targetId: 3
+       }
+     ]
    }
- 
+   
+   function App() {
+     return <CompanyOwnership data={data}></CompanyOwnership>
+   }
+   
    export default App
+
    ```
 
    > **Note:** By default, the `CompanyOwnership` component adjusts its size to match the size of its parent element. Therefore, it is necessary to set the dimensions of the containing element or apply styling directly to the `CompanyOwnership` component. This can be achieved by defining a CSS class or applying inline styles.
@@ -132,7 +152,7 @@ Find the full documentation, API and many code examples in our [documentation](h
 
 [![Live Playground](https://raw.githubusercontent.com/yWorks/react-yfiles-company-ownership/main/assets/playground.png)](https://docs.yworks.com/react-yfiles-company-ownership/introduction/welcome)
 
-Try the yFiles React Company Ownership component directly in your browser with our [playground](https://docs.yworks.com/react-yfiles-company-ownership/introduction/welcome)
+Try the yFiles React Company Ownership component directly in your browser with our [playground](https://docs.yworks.com/react-yfiles-company-ownership/introduction/welcome).
 
 ## Features
 
@@ -175,11 +195,11 @@ Use of such programs is governed by the rights and conditions as set out in the
 
 You can evaluate yFiles for 60 days free of charge on [my.yworks.com](https://my.yworks.com/signup?product=YFILES_HTML_EVAL).
 
-For more information, see the `LICENSE` file. 
+For more information, see the `LICENSE` file.
 
 ## Learn More
 
 Explore the possibilities of visualizing large ownership hierarchies with the yFiles Company Ownership Component.
-For further information about [yFiles for HTML](https://www.yworks.com/yfiles-overview) and our company, please visit [yWorks.com](https://www.yworks.com).
+For further information about [yFiles for HTML](https://www.yworks.com/products/yfiles-for-html) and our company, please visit [yWorks.com](https://www.yworks.com).
 
 For support or feedback, please reach out to [our support team](https://www.yworks.com/contact) or open an [issue on GitHub](https://github.com/yWorks/react-yfiles-company-ownership/issues). Happy diagramming!
