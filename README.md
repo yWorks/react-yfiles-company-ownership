@@ -10,33 +10,58 @@ for displaying company ownership charts in your React applications.
 
 ## Getting Started
 
-1. **Installation:**
-   Install the component via npm by running the following command in your project directory:
+### Prerequisites
+
+   To use the Company Ownership component, [yFiles for HTML](https://www.yworks.com/products/yfiles-for-html) is required. 
+   You can evaluate yFiles for 60 days free of charge on [my.yworks.com](https://my.yworks.com/signup?product=YFILES_HTML_EVAL). 
+   See [Licensing](https://docs.yworks.com/react-yfiles-company-ownership/introduction/licensing) for more information on this topic.
+
+   A convenient way of getting access to yFiles is to use the [yFiles Dev Suite](https://www.npmjs.com/package/yfiles-dev-suite). 
+   You can learn how to work with the yFiles npm module in our [Developer’s Guide](https://docs.yworks.com/yfileshtml/#/dguide/yfiles_npm_module).
+
+### Project Setup
+
+1. **Installation**
+
+   In addition to yFiles, the Company Ownership requires React to be installed in your project.
+   If you want to start your project from scratch, we recommend using vite:
+   ```
+   npm create vite@latest my-company-ownership-app -- --template react-ts
+   ```
+  
+   <details>
+
+   <summary>Sample <code>package.json</code> dependencies</summary>
+
+   ```json
+      "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "yfiles": "./lib/yfiles-26.0.0.tgz"
+     }
+   ```
+   </details>
+
+   After the peer dependencies, the component itself can be installed:
    ```bash
    npm install @yworks/react-yfiles-company-ownership
-      ```
-
-   The company-ownership module has some peer dependencies that must be installed somewhere in your project. Since it is a React module, `react` and `react-dom` dependencies are needed.
-
-   Additionally, the component relies on the [yFiles](https://www.yworks.com/yfiles-overview) library which is not published to the public npm registry. You can learn  how to work with the yFiles npm module in our [Developer's Guide](https://docs.yworks.com/yfileshtml/#/dguide/yfiles_npm_module).
-
-   Ensure that the dependencies in the `package.json` file resemble the following:
-   ```json
-   {
-     ...
-     "dependencies": {
-       "@yworks/react-yfiles-company-ownership": "^1.0.0",
-       "react": "^18.2.0",
-       "react-dom": "^18.2.0",
-       "yfiles": "<yFiles package path>/lib/yfiles-26.0.0.tgz",
-       ...
-     }
-   }
    ```
 
 2. **License:**
-   Before using the component, a valid [yFiles for HTML](https://www.yworks.com/products/yfiles-for-html) version is required. You can evaluate yFiles for 60 days free of charge on [my.yworks.com](https://my.yworks.com/signup?product=YFILES_HTML_EVAL).
-   Be sure to invoke the <TypeLink type="registerLicense" /> function to furnish the license file before utilizing the company-ownership component.
+   Be sure to invoke <TypeLink type="registerLicense" /> before using the company-ownership component.
+   In a yFiles for HTML evaluation package, you can find the license JSON file in the `lib/` folder. 
+   For licensed users, the license data is provided separately.   
+
+   <details>
+
+   <summary>License registration</summary>
+   
+   ```js
+   import yFilesLicense from './license.json'
+
+   registerLicense(yFilesLicense)
+   ```
+   </details>
 
 3. **Usage:**
    Utilize the component in your application. Make sure to import the CSS stylesheet.
