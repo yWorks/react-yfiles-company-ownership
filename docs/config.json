@@ -1,3 +1,4 @@
 {
-  "mainComponents": ["CompanyOwnership", "CompanyOwnershipProvider"]
+  "mainComponents": ["CompanyOwnership", "CompanyOwnershipProvider"],
+  "componentPropsDocText": "data={data}"
 }
