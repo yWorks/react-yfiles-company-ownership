@@ -23,7 +23,7 @@ You can learn how to work with the yFiles npm module in our [Developer’s Guide
 
 1. **Installation**
 
-   In addition to yFiles, the Company Ownership requires React to be installed in your project.
+   In addition to yFiles, the Company Ownership component requires React to be installed in your project.
    If you want to start your project from scratch, we recommend using vite:
    ```
    npm create vite@latest my-company-ownership-app -- --template react-ts
