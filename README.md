@@ -55,7 +55,7 @@ You can learn how to work with the yFiles npm module in our [Developer’s Guide
 
 2. **License**
 
-   Be sure to invoke <TypeLink type="registerLicense" /> before using the Company Ownership React component.
+   Be sure to invoke the `registerLicense` function before using the Company Ownership React component.
    When evaluating yFiles, the license JSON file is found in the `lib/` folder of the yFiles for HTML evaluation package.
    For licensed users, the license data is provided separately.
 
@@ -201,5 +201,8 @@ For more information, see the `LICENSE` file.
 
 Explore the possibilities of visualizing large ownership hierarchies with the yFiles Company Ownership Component.
 For further information about [yFiles for HTML](https://www.yworks.com/products/yfiles-for-html) and our company, please visit [yWorks.com](https://www.yworks.com).
+
+If you are exploring a different use case and require another React component,
+please take a look at the available [React components](https://www.yworks.com/yfiles-react-components) powered by yFiles!
 
 For support or feedback, please reach out to [our support team](https://www.yworks.com/contact) or open an [issue on GitHub](https://github.com/yWorks/react-yfiles-company-ownership/issues). Happy diagramming!
