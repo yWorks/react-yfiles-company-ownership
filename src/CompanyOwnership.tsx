@@ -29,6 +29,7 @@ import {
 } from './core/input'
 import {
   checkLicense,
+  checkStylesheetLoaded,
   ContextMenu,
   ContextMenuItemProvider,
   EdgeStyle as ConnectionStyle,
@@ -444,23 +445,6 @@ export type HighlightOptions = {
   selectionHighlightCssClass?: string
 }
 
-function checkStylesLoaded(root: HTMLElement | null) {
-  const dummy = document.createElement('div')
-  dummy.id = 'yfiles-react-stylesheet-detection'
-  const rootNode = root?.getRootNode() ?? document
-  const parent = rootNode === document ? document.body : rootNode
-  parent.appendChild(dummy)
-  const computedStyle = getComputedStyle(dummy)
-  const hasStyle = computedStyle.fontSize === '1px'
-
-  if (!hasStyle) {
-    console.warn(
-      "Stylesheet not loaded! Please import 'dist/index.css' from the @yworks/react-yfiles-company-ownership package."
-    )
-  }
-  dummy.remove()
-}
-
 const licenseErrorCodeSample = `import {CompanyOwnership, registerLicense} from '@yworks/react-yfiles-company-ownership' 
 import '@yworks/react-yfiles-company-ownership/dist/index.css'
 import yFilesLicense from './license.json'
@@ -546,7 +530,7 @@ const CompanyOwnershipCore = withGraphComponent(
     const graphComponent = companyOwnershipModel.graphComponent
 
     useEffect(() => {
-      checkStylesLoaded(graphComponent.div)
+      checkStylesheetLoaded(graphComponent.div, 'react-yfiles-company-ownership')
     }, [])
 
     useEffect(() => {
