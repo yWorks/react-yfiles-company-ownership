@@ -29,6 +29,7 @@ import {
 } from './core/input'
 import {
   checkLicense,
+  checkStylesheetLoaded,
   ContextMenu,
   ContextMenuItemProvider,
   EdgeStyle as ConnectionStyle,
@@ -444,22 +445,25 @@ export type HighlightOptions = {
   selectionHighlightCssClass?: string
 }
 
-function checkStylesLoaded(root: HTMLElement | null) {
-  const dummy = document.createElement('div')
-  dummy.id = 'yfiles-react-stylesheet-detection'
-  const rootNode = root?.getRootNode() ?? document
-  const parent = rootNode === document ? document.body : rootNode
-  parent.appendChild(dummy)
-  const computedStyle = getComputedStyle(dummy)
-  const hasStyle = computedStyle.fontSize === '1px'
+const licenseErrorCodeSample = `import {CompanyOwnership, registerLicense} from '@yworks/react-yfiles-company-ownership' 
+import '@yworks/react-yfiles-company-ownership/dist/index.css'
+import yFilesLicense from './license.json'
 
-  if (!hasStyle) {
-    console.warn(
-      "Stylesheet not loaded! Please import 'dist/index.css' from the @yworks/react-yfiles-company-ownership package."
-    )
+function App() {
+  registerLicense(yFilesLicense)
+            
+  const data = {
+    "companies": [
+      { "id": 0, "name": "Big Data Group" },
+      { "id": 1, "name": "Investment Capital" }
+    ],
+    "connections": [
+      { "sourceId": 0, "targetId": 1 }
+    ]
   }
-  dummy.remove()
-}
+
+  return <CompanyOwnership data={data}></CompanyOwnership>
+}`
 
 /**
  * The CompanyOwnership component visualizes the given data as a company ownership chart.
@@ -479,7 +483,12 @@ export function CompanyOwnership<
   TNeedle = string
 >(props: CompanyOwnershipProps<TEntity, TConnection, TNeedle> & PropsWithChildren) {
   if (!checkLicense()) {
-    return <LicenseError />
+    return (
+      <LicenseError
+        componentName={'yFiles React Company Ownership Component'}
+        codeSample={licenseErrorCodeSample}
+      />
+    )
   }
 
   const isWrapped = useCompanyOwnershipContextInternal()
@@ -521,7 +530,7 @@ const CompanyOwnershipCore = withGraphComponent(
     const graphComponent = companyOwnershipModel.graphComponent
 
     useEffect(() => {
-      checkStylesLoaded(graphComponent.div)
+      checkStylesheetLoaded(graphComponent.div, 'react-yfiles-company-ownership')
     }, [])
 
     useEffect(() => {
