@@ -1,53 +1,52 @@
 .company-ownership-item {
-    font-family: sans-serif;
-    height: 100%;
-    background-color: white;
-    border-radius: 5px;
+  font-family: sans-serif;
+  height: 100%;
+  background-color: white;
+  border-radius: 5px;
 }
 
 .company-ownership-item-content {
-    display: flex;
-    flex-direction: column;
-    gap: 7px;
-    padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 10px;
 }
 
 .company-icon {
-    position: absolute;
-    right: 5px;
-    top: 5px;
-    color: darkgrey;
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  color: darkgrey;
 }
 
 .type-text {
-    font-size: small;
+  font-size: small;
 }
 
 .name-text {
-    font-size: large;
-    font-weight: bolder;
+  font-size: large;
+  font-weight: bolder;
 }
 
 .details-text {
-    font-size: smaller;
+  font-size: smaller;
 }
 
 .buttons-container {
-    text-align: center;
-    visibility: hidden;
-    height: 24px;
+  text-align: center;
+  visibility: hidden;
+  height: 24px;
 }
 .company-ownership-item:hover .buttons-container {
-    visibility: visible;
+  visibility: visible;
 }
 .company-ownership-item button {
-    width: 24px;
-    height: 24px;
-    background-color: #d5d5d5;
-    border-radius: 12px;
-    border: 0;
+  width: 24px;
+  height: 24px;
+  background-color: #d5d5d5;
+  border-radius: 12px;
+  border: 0;
 }
 .company-ownership-item button:hover {
-    background-color: #b1b1b1;
+  background-color: #b1b1b1;
 }
-

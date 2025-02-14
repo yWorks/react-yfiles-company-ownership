@@ -1,21 +1,16 @@
 import {
   Arrow,
-  EdgeStyleDecorationInstaller,
+  EdgeStyleIndicatorRenderer,
   GraphComponent,
-  GraphFocusIndicatorManager,
-  GraphHighlightIndicatorManager,
-  GraphSelectionIndicatorManager,
   GraphViewerInputMode,
   IEdge,
   IEdgeStyle,
   type IModelItem,
-  IndicatorNodeStyleDecorator,
   INodeStyle,
+  NodeStyleIndicatorRenderer,
   PolylineEdgeStyle,
-  ShapeNodeStyle,
-  VoidEdgeStyle,
-  VoidNodeStyle
-} from 'yfiles'
+  ShapeNodeStyle
+} from '@yfiles/yfiles'
 import { hoverHighlightColor, selectionHighlightColor } from './defaults.ts'
 import { HighlightOptions } from '../CompanyOwnership.tsx'
 
@@ -28,12 +23,12 @@ async function highlightItem(
   highlight: boolean
 ): Promise<void> {
   const highlightManager = graphComponent.highlightIndicatorManager
-  highlightManager.clearHighlights()
+  highlightManager.items?.clear()
   if (item) {
     if (highlight) {
-      highlightManager.addHighlight(item)
+      highlightManager.items?.add(item)
     } else {
-      highlightManager.removeHighlight(item)
+      highlightManager.items?.remove(item)
     }
   }
 }
@@ -66,7 +61,7 @@ export function initializeHoverHighlighting(
   inputMode: GraphViewerInputMode
 ) {
   // show the indicators on hover
-  inputMode.itemHoverInputMode.addHoveredItemChangedListener((_, { item, oldItem }) => {
+  inputMode.itemHoverInputMode.addEventListener('hovered-item-changed', ({ item, oldItem }) => {
     void highlightItem(graphComponent, oldItem, false)
     void highlightItem(graphComponent, item, true)
   })
@@ -82,41 +77,39 @@ export function configureIndicatorStyling(
   const hoverClass = highlightOptions?.hoverHighlightCssClass ?? ''
 
   // style the selection and hover indicators
-  graphComponent.highlightIndicatorManager = new GraphHighlightIndicatorManager({
-    nodeStyle: new IndicatorNodeStyleDecorator({
-      wrapped: getHighlightNodeStyle(hoverColor, hoverClass),
-      // the padding from the actual node to its highlight visualization
-      padding: 4,
+  graphComponent.graph.decorator.nodes.highlightRenderer.addConstant(
+    new NodeStyleIndicatorRenderer({
+      nodeStyle: getHighlightNodeStyle(hoverColor, hoverClass),
+      // the margin from the actual node to its highlight visualization
+      margins: 4,
       zoomPolicy: 'mixed'
     })
-  })
+  )
 
-  graphComponent.selectionIndicatorManager = new GraphSelectionIndicatorManager({
-    nodeStyle: new IndicatorNodeStyleDecorator({
-      wrapped: getHighlightNodeStyle(selectionColor, selectionClass),
-      // the padding from the actual node to its highlight visualization
-      padding: 4,
+  graphComponent.graph.decorator.nodes.selectionRenderer.addConstant(
+    new NodeStyleIndicatorRenderer({
+      nodeStyle: getHighlightNodeStyle(selectionColor, selectionClass),
+      // the margin from the actual node to its highlight visualization
+      margins: 4,
       zoomPolicy: 'mixed'
     })
-  })
+  )
 
   const graphDecorator = graphComponent.graph.decorator
-  graphDecorator.edgeDecorator.selectionDecorator.setFactory(edge => {
-    return new EdgeStyleDecorationInstaller({
+  graphDecorator.edges.selectionRenderer.addFactory(edge => {
+    return new EdgeStyleIndicatorRenderer({
       edgeStyle: getHighlightEdgeStyle(edge, selectionColor, selectionClass),
       zoomPolicy: 'mixed'
     })
   })
-  graphDecorator.edgeDecorator.highlightDecorator.setFactory(edge => {
-    return new EdgeStyleDecorationInstaller({
+  graphDecorator.edges.highlightRenderer.addFactory(edge => {
+    return new EdgeStyleIndicatorRenderer({
       edgeStyle: getHighlightEdgeStyle(edge, hoverColor, hoverClass),
       zoomPolicy: 'mixed'
     })
   })
 
   // hide focus indication
-  graphComponent.focusIndicatorManager = new GraphFocusIndicatorManager({
-    nodeStyle: VoidNodeStyle.INSTANCE,
-    edgeStyle: VoidEdgeStyle.INSTANCE
-  })
+  graphComponent.graph.decorator.nodes.focusRenderer.hide()
+  graphComponent.graph.decorator.edges.focusRenderer.hide()
 }

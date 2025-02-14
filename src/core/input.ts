@@ -1,15 +1,11 @@
 import {
   type GraphComponent,
-  GraphFocusIndicatorManager,
   GraphItemTypes,
   GraphViewerInputMode,
   HoveredItemChangedEventArgs,
   IEdge,
-  INode,
-  ItemHoverInputMode,
-  ShowFocusPolicy,
-  VoidNodeStyle
-} from 'yfiles'
+  INode
+} from '@yfiles/yfiles'
 import { geTEntity } from './data-loading'
 import { CompanyOwnershipModel } from '../CompanyOwnershipModel.ts'
 import { Connection, Entity } from '../CompanyOwnership.tsx'
@@ -20,7 +16,7 @@ import { initializeHoverHighlighting } from './configure-highlight-indicators.ts
  */
 export function initializeInputMode(
   graphComponent: GraphComponent,
-  CompanyOwnership: CompanyOwnershipModel,
+  CompanyOwnership: CompanyOwnershipModel
 ): void {
   const graphViewerInputMode = new GraphViewerInputMode({
     clickableItems: GraphItemTypes.NODE | GraphItemTypes.EDGE,
@@ -32,7 +28,7 @@ export function initializeInputMode(
     clickHitTestOrder: [GraphItemTypes.EDGE, GraphItemTypes.NODE]
   })
 
-  graphViewerInputMode.addItemDoubleClickedListener((_, evt) => {
+  graphViewerInputMode.addEventListener('item-double-clicked', evt => {
     const item = evt.item
     if (item instanceof INode) {
       CompanyOwnership.zoomTo([geTEntity(item) as Entity])
@@ -52,18 +48,18 @@ export function initializeHover<TEntity extends Entity | Connection>(
   const inputMode = graphComponent.inputMode as GraphViewerInputMode
   inputMode.itemHoverInputMode.hoverItems = GraphItemTypes.NODE | GraphItemTypes.EDGE
   // Do not report "null" for ignored hovered items.
-  inputMode.itemHoverInputMode.discardInvalidItems = false
+  inputMode.itemHoverInputMode.ignoreInvalidItems = false
 
-  const hoverItemChangedListener: (
-    sender: ItemHoverInputMode,
-    evt: HoveredItemChangedEventArgs
-  ) => void = (_, { item, oldItem }): void => {
+  const hoverItemChangedListener: (evt: HoveredItemChangedEventArgs) => void = ({
+    item,
+    oldItem
+  }): void => {
     if (onHover) {
       onHover(item?.tag, oldItem?.tag)
     }
   }
 
-  inputMode.itemHoverInputMode.addHoveredItemChangedListener(hoverItemChangedListener)
+  inputMode.itemHoverInputMode.addEventListener('hovered-item-changed', hoverItemChangedListener)
   return hoverItemChangedListener
 }
 
@@ -87,7 +83,7 @@ export function initializeFocus<TEntity extends Entity | Connection>(
       }
     }
   }
-  graphComponent.addCurrentItemChangedListener(currentItemChangedListener)
+  graphComponent.addEventListener('current-item-changed', currentItemChangedListener)
   return currentItemChangedListener
 }
 
@@ -105,13 +101,14 @@ export function initializeSelection<TEntity extends Entity | Connection>(
     itemSelectionChangedListener = () => {
       onSelect(
         graphComponent.selection
-          .filter(element => IEdge.isInstance(element) || INode.isInstance(element))
+          .filter(element => element instanceof IEdge || element instanceof INode)
           .map(element => geTEntity<TEntity>(element as INode | IEdge))
           .toArray()
       )
     }
   }
-  graphComponent.selection.addItemSelectionChangedListener(itemSelectionChangedListener)
+  graphComponent.selection.addEventListener('item-added', itemSelectionChangedListener)
+  graphComponent.selection.addEventListener('item-removed', itemSelectionChangedListener)
   return itemSelectionChangedListener
 }
 
@@ -122,8 +119,5 @@ export function initializeHighlights(graphComponent: GraphComponent): void {
   graphComponent.selectionIndicatorManager.enabled = false
 
   // Hide the default focus highlight in favor of the CSS highlighting from the template styles
-  graphComponent.focusIndicatorManager = new GraphFocusIndicatorManager({
-    showFocusPolicy: ShowFocusPolicy.ALWAYS,
-    nodeStyle: VoidNodeStyle.INSTANCE
-  })
+  graphComponent.graph.decorator.nodes.focusRenderer.hide()
 }

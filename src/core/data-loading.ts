@@ -1,12 +1,12 @@
 import {
-  DefaultLabelStyle,
+  LabelStyle,
   EdgesSource,
   GraphBuilder,
   IEdge,
   type IGraph,
   type INode,
   NodesSource
-} from 'yfiles'
+} from '@yfiles/yfiles'
 import {
   Connection,
   CompanyOwnershipData,
@@ -121,7 +121,7 @@ export function initializeGraphManager<TEntity extends Entity, TConnection exten
 
   const edgeCreator = edgesSource.edgeCreator
 
-  edgeCreator.styleProvider = (edge: TConnection) => {
+  edgeCreator.styleProvider = edge => {
     if (graphManager.connectionStyleProvider) {
       const edgeStyle = graphManager.connectionStyleProvider({
         source: graphManager.nodeData.find(item => item.id === edge.sourceId)!,
@@ -142,7 +142,7 @@ export function initializeGraphManager<TEntity extends Entity, TConnection exten
   labelBinding.styleProvider = dataItem =>
     getConnectionLabelStyle(companyOwnershipModel, dataItem, graphManager.connectionLabelProvider)
 
-  labelBinding.addLabelUpdatedListener((_, evt) =>
+  labelBinding.addEventListener('label-updated', evt =>
     labelBinding.updateText(evt.graph, evt.item, evt.dataItem)
   )
 
@@ -169,7 +169,7 @@ export function initializeGraphManager<TEntity extends Entity, TConnection exten
     nameLabelBinding.styleProvider = dataItem =>
       getItemLabelStyle(companyOwnershipModel, dataItem, graphManager.itemLabelProvider)
 
-    nameLabelBinding.addLabelUpdatedListener((_, evt) =>
+    nameLabelBinding.addEventListener('label-updated', evt =>
       nameLabelBinding.updateText(evt.graph, evt.item, evt.dataItem)
     )
   }
@@ -185,14 +185,14 @@ export function initializeGraphManager<TEntity extends Entity, TConnection exten
   nodeCreator.layoutBindings.addBinding('x', (item: TEntity) => getNode(item, graph)?.layout.x ?? 0)
   nodeCreator.layoutBindings.addBinding('y', (item: TEntity) => getNode(item, graph)?.layout.y ?? 0)
 
-  nodeCreator.addNodeUpdatedListener((_, evt) => {
+  nodeCreator.addEventListener('node-updated', evt => {
     nodeCreator.updateLayout(evt.graph, evt.item, evt.dataItem)
     nodeCreator.updateStyle(evt.graph, evt.item, evt.dataItem)
     nodeCreator.updateTag(evt.graph, evt.item, evt.dataItem)
     nodeCreator.updateLabels(evt.graph, evt.item, evt.dataItem)
   })
 
-  edgeCreator.addEdgeUpdatedListener((_, evt) => {
+  edgeCreator.addEventListener('edge-updated', evt => {
     edgeCreator.updateStyle(evt.graph, evt.item, evt.dataItem)
     edgeCreator.updateTag(evt.graph, evt.item, evt.dataItem)
     edgeCreator.updateLabels(evt.graph, evt.item, evt.dataItem)
@@ -222,16 +222,14 @@ function compareData<T>(oldData: T[], newData: T[]): T[] {
   return unequalElements
 }
 
-export function convertToDefaultLabelStyle(
-  label: SimpleLabel,
-  cssClass: string
-): DefaultLabelStyle {
-  return new DefaultLabelStyle({
+export function convertToDefaultLabelStyle(label: SimpleLabel, cssClass: string): LabelStyle {
+  return new LabelStyle({
     textFill: 'currentColor',
+    wrapping: 'none',
     backgroundFill: '#ffffff',
     shape: label.labelShape ?? 'round-rectangle',
     cssClass: `${cssClass} ${label.className ?? ''}`,
-    insets: 5
+    padding: 5
   })
 }
 
@@ -250,7 +248,7 @@ function getConnectionLabelStyle<TConnection extends Connection>(
   companyOwnershipModel: CompanyOwnershipModel,
   connection: TConnection,
   connectionLabelProvider?: ConnectionLabelProvider<TConnection>
-): DefaultLabelStyle | null {
+): LabelStyle | null {
   if (connectionLabelProvider) {
     const connectionLabel = connectionLabelProvider(connection, companyOwnershipModel)
     if (connectionLabel) {
@@ -275,7 +273,7 @@ function getItemLabelStyle<TEntity extends Entity>(
   companyOwnershipModel: CompanyOwnershipModel,
   item: TEntity,
   itemLabelProvider?: EntityLabelProvider<TEntity>
-): DefaultLabelStyle | null {
+): LabelStyle | null {
   if (itemLabelProvider) {
     const label = itemLabelProvider(item, companyOwnershipModel)
     if (label) {

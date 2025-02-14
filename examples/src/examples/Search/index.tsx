@@ -24,7 +24,7 @@ function MyCompanyOwnershipComponent() {
         searchNeedle={searchQuery}
         onSearch={(data: Entity | Connection, searchQuery: string) => {
           return 'name' in data
-            ? data.name!.toLowerCase().includes(searchQuery.toLowerCase()) ?? false
+            ? (data.name!.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
             : false
         }}
       ></CompanyOwnership>

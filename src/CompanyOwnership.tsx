@@ -17,9 +17,9 @@ import {
   GraphObstacleProvider,
   GraphViewerInputMode,
   IGraph,
-  NodeInsetsProvider,
+  GroupPaddingProvider,
   Size
-} from 'yfiles'
+} from '@yfiles/yfiles'
 import {
   initializeFocus,
   initializeHighlights,
@@ -530,7 +530,7 @@ const CompanyOwnershipCore = withGraphComponent(
     const graphComponent = companyOwnershipModel.graphComponent
 
     useEffect(() => {
-      checkStylesheetLoaded(graphComponent.div, 'react-yfiles-company-ownership')
+      checkStylesheetLoaded(graphComponent.htmlElement, 'react-yfiles-company-ownership')
     }, [])
 
     useEffect(() => {
@@ -550,9 +550,9 @@ const CompanyOwnershipCore = withGraphComponent(
       initializeDefaultStyle(graph, setNodeInfos, itemSize)
       initializeBridges(graphComponent)
 
-      graphComponent.graph.decorator.nodeDecorator.insetsProviderDecorator.setFactory(node => {
+      graphComponent.graph.decorator.nodes.groupPaddingProvider.addFactory(node => {
         return graphComponent.graph.isGroupNode(node)
-          ? new NodeInsetsProvider([50, 15, 15, 15])
+          ? new GroupPaddingProvider([50, 15, 15, 15])
           : null
       })
 
@@ -590,9 +590,10 @@ const CompanyOwnershipCore = withGraphComponent(
       return () => {
         // clean up
         hoverItemChangedListener &&
-          (
-            graphComponent.inputMode as GraphViewerInputMode
-          ).itemHoverInputMode.removeHoveredItemChangedListener(hoverItemChangedListener)
+          (graphComponent.inputMode as GraphViewerInputMode).itemHoverInputMode.removeEventListener(
+            'hovered-item-changed',
+            hoverItemChangedListener
+          )
       }
     }, [onItemHover])
 
@@ -604,9 +605,11 @@ const CompanyOwnershipCore = withGraphComponent(
       return () => {
         // clean up the listeners
         currentItemChangedListener &&
-          graphComponent.removeCurrentItemChangedListener(currentItemChangedListener)
-        selectedItemChangedListener &&
-          graphComponent.selection.removeItemSelectionChangedListener(selectedItemChangedListener)
+          graphComponent.removeEventListener('current-item-changed', currentItemChangedListener)
+        if (selectedItemChangedListener) {
+          graphComponent.selection.removeEventListener('item-added', selectedItemChangedListener)
+          graphComponent.selection.removeEventListener('item-removed', selectedItemChangedListener)
+        }
       }
     }, [onItemFocus, onItemSelect])
 

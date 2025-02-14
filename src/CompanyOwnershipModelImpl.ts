@@ -2,7 +2,7 @@ import { Connection, Entity, EntityId } from './CompanyOwnership.tsx'
 
 import { getNode, getNodeFromId, CompanyOwnershipModelInternal } from './CompanyOwnershipModel.ts'
 
-import { GraphComponent, ICommand, INode, Insets, MutableRectangle } from 'yfiles'
+import { GraphComponent, Command, INode, Insets, MutableRectangle } from '@yfiles/yfiles'
 
 import {
   exportImageAndSave,
@@ -85,9 +85,7 @@ export function createCompanyOwnershipModel(
 
   function canClearConnectedItemsHighlight() {
     const neighborhoodIndicatorManager = getNeighborhoodIndicatorManager(graphComponent)
-    return neighborhoodIndicatorManager.selectionModel
-      ? neighborhoodIndicatorManager.selectionModel.size > 0
-      : false
+    return neighborhoodIndicatorManager.items ? neighborhoodIndicatorManager.items.size > 0 : false
   }
 
   function clearConnectedItemsHighlight() {
@@ -107,11 +105,11 @@ export function createCompanyOwnershipModel(
   }
 
   function zoomIn() {
-    ICommand.INCREASE_ZOOM.execute(null, graphComponent)
+    graphComponent.executeCommand(Command.INCREASE_ZOOM, null)
   }
 
   function zoomOut() {
-    ICommand.DECREASE_ZOOM.execute(null, graphComponent)
+    graphComponent.executeCommand(Command.DECREASE_ZOOM, null)
   }
 
   function fitContent(insets: number = 0) {
@@ -119,7 +117,7 @@ export function createCompanyOwnershipModel(
   }
 
   function zoomToOriginal() {
-    ICommand.ZOOM.execute(1.0, graphComponent)
+    graphComponent.executeCommand(Command.ZOOM, 1.0)
   }
 
   async function exportToSvg(exportSettings: ExportSettings) {
@@ -208,8 +206,8 @@ export function createCompanyOwnershipModel(
       gcSize.height / enlargedTargetBounds.height
     )
     graphComponent.zoomToAnimated(
-      enlargedTargetBounds.center,
-      Math.max(newZoom, graphComponent.zoom)
+      Math.max(newZoom, graphComponent.zoom),
+      enlargedTargetBounds.center
     )
   }
 

@@ -1,34 +1,35 @@
 import {
   AdjacencyTypes,
   Arrow,
-  Class,
+  EdgeStyleIndicatorRenderer,
   GraphComponent,
-  GraphHighlightIndicatorManager,
-  IContextLookupChainLink,
+  HighlightIndicatorManager,
+  IEdge,
+  IEdgeStyle,
   ILookupDecorator,
   IModelItem,
-  IndicatorEdgeStyleDecorator,
-  IndicatorNodeStyleDecorator,
   INode,
+  INodeStyle,
+  IObjectRenderer,
+  LookupDecorator,
   Neighborhood,
+  NodeStyleIndicatorRenderer,
   PolylineEdgeStyle,
   ShapeNodeStyle,
   TraversalDirection
-} from 'yfiles'
-import { neighborhoodHighlightColor } from './defaults.ts'
+} from '@yfiles/yfiles'
 import { HighlightOptions } from '../CompanyOwnership.tsx'
+import { neighborhoodHighlightColor } from './defaults.ts'
 
-export class NeighborhoodIndicatorManager extends GraphHighlightIndicatorManager {
-  // remember the neighborhood's items to restore the highlighting after collapse/expand
+export class NeighborhoodIndicatorManager extends HighlightIndicatorManager<any> {
+  // remember the neighborhood's master items to restore the highlighting after collapse/expand
   private neighborhoodCollection: Set<IModelItem> = new Set<IModelItem>()
+  private nodeStyle: INodeStyle = INodeStyle.VOID_NODE_STYLE
+  private edgeStyle: IEdgeStyle = IEdgeStyle.VOID_EDGE_STYLE
 
-  constructor(
-    private readonly graphComponent: GraphComponent,
-    highlightOptions?: HighlightOptions
-  ) {
-    super({
-      canvasComponent: graphComponent
-    })
+  constructor(graphComponent: GraphComponent, highlightOptions?: HighlightOptions) {
+    super()
+    this.canvasComponent = graphComponent
     this.update(highlightOptions)
   }
 
@@ -37,35 +38,43 @@ export class NeighborhoodIndicatorManager extends GraphHighlightIndicatorManager
       highlightOptions?.neighborhoodHighlightColor ?? neighborhoodHighlightColor
     const neighborhoodClass = highlightOptions?.neighborhoodHighlightCssClass ?? ''
 
-    this.nodeStyle = new IndicatorNodeStyleDecorator({
-      wrapped: new ShapeNodeStyle({
-        shape: 'round-rectangle',
-        stroke: `3px ${neighborhoodColor}`,
-        fill: 'none',
-        cssClass: neighborhoodClass
-      }),
-      // the padding from the actual node to its highlight visualization
-      padding: 2
+    this.nodeStyle = new ShapeNodeStyle({
+      shape: 'round-rectangle',
+      stroke: `3px ${neighborhoodColor}`,
+      fill: 'none',
+      cssClass: neighborhoodClass
     })
 
-    this.edgeStyle = new IndicatorEdgeStyleDecorator({
-      wrapped: new PolylineEdgeStyle({
-        targetArrow: new Arrow({
-          type: 'triangle',
-          stroke: `2px ${neighborhoodColor}`,
-          fill: neighborhoodColor
-        }),
-        stroke: `3px ${neighborhoodColor}`,
-        cssClass: neighborhoodClass
-      })
+    this.edgeStyle = new PolylineEdgeStyle({
+      targetArrow: new Arrow({
+        type: 'triangle',
+        stroke: `2px ${neighborhoodColor}`,
+        fill: neighborhoodColor
+      }),
+      stroke: `3px ${neighborhoodColor}`,
+      cssClass: neighborhoodClass
     })
   }
 
+  protected getRenderer(item: any): IObjectRenderer<any> | null {
+    return item instanceof INode
+      ? new NodeStyleIndicatorRenderer({
+          nodeStyle: this.nodeStyle,
+          // the padding from the actual node to its highlight visualization
+          margins: 2
+        })
+      : item instanceof IEdge
+        ? new EdgeStyleIndicatorRenderer({
+            edgeStyle: this.edgeStyle,
+            zoomPolicy: 'world-coordinates'
+          })
+        : super.getRenderer(item)
+  }
+
   highlightNeighborhood(viewStartNode: INode): void {
-    const graph = this.graphComponent.graph
+    super.items?.clear()
 
-    super.clearHighlights()
-
+    const graph = (this.canvasComponent as GraphComponent).graph
     this.addHighlight(viewStartNode)
 
     const neighborhood = new Neighborhood({
@@ -105,24 +114,33 @@ export class NeighborhoodIndicatorManager extends GraphHighlightIndicatorManager
     }
   }
 
-  addHighlight(item: IModelItem) {
-    super.addHighlight(item)
-    this.neighborhoodCollection.add(item)
+  addHighlight(viewItem: IModelItem) {
+    super.items?.add(viewItem)
+    this.neighborhoodCollection.add(viewItem)
   }
 
   clearHighlights() {
     this.neighborhoodCollection.clear()
-    super.clearHighlights()
+    super.items?.clear()
   }
 
   deactivateHighlights(): void {
     // clear highlights while keeping the internal collections
-    super.clearHighlights()
+    super.items?.clear()
   }
 
   activateHighlights(): void {
+    // find the visible nodes in the graph depending on the stored collection
+    let visibleItem: IModelItem | null = null
     for (const item of this.neighborhoodCollection) {
-      super.addHighlight(item)
+      if (item instanceof INode) {
+        visibleItem = item
+      } else if (item instanceof IEdge) {
+        visibleItem = item
+      }
+      if (visibleItem) {
+        super.items?.add(visibleItem)
+      }
     }
   }
 }
@@ -134,28 +152,21 @@ export function registerNeighborHoodIndicatorManager(
   graphComponent: GraphComponent,
   highlightOptions?: HighlightOptions
 ): void {
-  Class.fixType(NeighborhoodIndicatorManager)
-
   const neighborhoodIndicatorManager = new NeighborhoodIndicatorManager(
     graphComponent,
     highlightOptions
   )
-  const decorator = graphComponent.lookup(ILookupDecorator.$class) as ILookupDecorator
-  decorator.addLookup(
-    GraphComponent.$class,
-    IContextLookupChainLink.createContextLookupChainLink((_item, type) => {
-      if (type === NeighborhoodIndicatorManager.$class) {
-        return neighborhoodIndicatorManager
-      }
-      return null
-    })
+  const lookupDecorator = graphComponent.lookup(ILookupDecorator) as ILookupDecorator
+
+  new LookupDecorator(GraphComponent, NeighborhoodIndicatorManager, lookupDecorator).addConstant(
+    neighborhoodIndicatorManager
   )
 }
 
 export function getNeighborhoodIndicatorManager(
   graphComponent: GraphComponent
 ): NeighborhoodIndicatorManager {
-  const manager = graphComponent.lookup(NeighborhoodIndicatorManager.$class)
+  const manager = graphComponent.lookup(NeighborhoodIndicatorManager)
   if (!manager) {
     throw new Error('No NeighborhoodIndicatorManager registered on the GraphComponent')
   }

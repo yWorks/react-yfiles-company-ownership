@@ -61,7 +61,7 @@ export default () => {
                   smoothingLength: 20,
                   thickness: 5,
                   targetArrow: {
-                    type: 'circle',
+                    type: 'ellipse',
                     color: '#002642'
                   },
                   className: 'ownership-connection'

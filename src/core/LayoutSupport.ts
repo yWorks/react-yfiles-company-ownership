@@ -1,13 +1,14 @@
 import {
-  FixNodeLayoutData,
   type GraphComponent,
-  HierarchicLayoutData,
+  HierarchicalLayoutData,
   INode,
+  LayoutAnchoringPolicy,
+  LayoutAnchoringStageData,
   LayoutData,
   LayoutExecutor,
   LayoutExecutorAsync,
   Rect
-} from 'yfiles'
+} from '@yfiles/yfiles'
 import { LayoutOptions } from '../CompanyOwnership.tsx'
 import { Dispatch, SetStateAction } from 'react'
 import {
@@ -43,19 +44,17 @@ export class LayoutSupport {
     let layoutData: LayoutData | null = null
 
     if (incremental) {
-      layoutData = new HierarchicLayoutData({
-        incrementalHints: (item, factory) =>
-          item instanceof INode && incrementalNodes.includes(item)
-            ? factory.createLayerIncrementallyHint(item)
-            : null
+      layoutData = new HierarchicalLayoutData({
+        incrementalNodes: node => node instanceof INode && incrementalNodes.includes(node)
       })
     }
 
     if (fixedNode) {
-      const fixNodeLayoutData = new FixNodeLayoutData()
-      fixNodeLayoutData.fixedNodes.item = fixedNode
+      const fixNodeLayoutData = new LayoutAnchoringStageData()
+      fixNodeLayoutData.nodeAnchoringPolicies.mapperFunction = key =>
+        key === fixedNode ? LayoutAnchoringPolicy.CENTER : LayoutAnchoringPolicy.NONE
       if (!layoutData) {
-        layoutData = new HierarchicLayoutData()
+        layoutData = new HierarchicalLayoutData()
       }
       layoutData = layoutData.combineWith(fixNodeLayoutData)
     }
@@ -95,7 +94,7 @@ export class LayoutSupport {
 
     try {
       await executor.start()
-      this.graphComponent.viewportLimiter.bounds = this.graphComponent.contentRect
+      this.graphComponent.viewportLimiter.bounds = this.graphComponent.contentBounds
     } catch (e) {
       if ((e as Record<string, unknown>).name === 'AlgorithmAbortedError') {
         console.error('Layout calculation was aborted because maximum duration time was exceeded.')
@@ -146,11 +145,11 @@ export class LayoutSupport {
       graphComponent: this.graphComponent,
       layout: createLayout(incremental, this.layoutOptions),
       layoutData: this.createLayoutData(incremental, incrementalNodes, fixedNode),
-      duration: '300ms',
+      animationDuration: '300ms',
       animateViewport: fitViewport,
-      updateContentRect: true,
-      targetBoundsInsets: defaultGraphFitInsets,
-      portAdjustmentPolicy: defaultPortAdjustmentPolicy
+      updateContentBounds: true,
+      targetBoundsPadding: defaultGraphFitInsets,
+      portAdjustmentPolicies: defaultPortAdjustmentPolicy
     })
 
     return Promise.resolve(this.executor)
@@ -192,11 +191,11 @@ export class LayoutSupport {
       messageHandler: webWorkerMessageHandler,
       graphComponent: this.graphComponent,
       layoutData: this.createLayoutData(incremental, incrementalNodes, fixedNode),
-      duration: '300ms',
+      stopDuration: '300ms',
       animateViewport: fitViewport,
-      updateContentRect: true,
-      targetBoundsInsets: defaultGraphFitInsets,
-      portAdjustmentPolicy: defaultPortAdjustmentPolicy
+      updateContentBounds: true,
+      targetBoundsPadding: defaultGraphFitInsets,
+      portAdjustmentPolicies: defaultPortAdjustmentPolicy
     })
     return this.executorAsync
   }

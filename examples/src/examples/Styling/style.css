@@ -1,23 +1,23 @@
 .yfiles-react-connection-label.ownership-label .yfiles-label-background {
-    color: #E5DADA;
+  color: #e5dada;
 }
 .yfiles-react-connection-label.ownership-label .yfiles-label-text {
-    color: #840032;
+  color: #840032;
 }
 .ownership-connection {
-    color: #002642;
-    stroke-dasharray: 5, 5;
+  color: #002642;
+  stroke-dasharray: 5, 5;
 }
 .relation-connection {
-    color: #E59500;
-    stroke-dasharray: 5, 5;
+  color: #e59500;
+  stroke-dasharray: 5, 5;
 }
 .yfiles-react-item-label.company-label .yfiles-label-background {
-    color: #E5DADA;
+  color: #e5dada;
 }
 .yfiles-react-node.custom-big-data-group {
-    border: 3px solid #ff7957;
+  border: 3px solid #ff7957;
 }
 .entity-selected {
-    stroke: #76b041;
+  stroke: #76b041;
 }
