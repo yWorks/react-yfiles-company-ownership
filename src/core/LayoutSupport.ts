@@ -94,7 +94,6 @@ export class LayoutSupport {
 
     try {
       await executor.start()
-      this.graphComponent.viewportLimiter.bounds = this.graphComponent.contentBounds
     } catch (e) {
       if ((e as Record<string, unknown>).name === 'AlgorithmAbortedError') {
         console.error('Layout calculation was aborted because maximum duration time was exceeded.')
@@ -191,7 +190,7 @@ export class LayoutSupport {
       messageHandler: webWorkerMessageHandler,
       graphComponent: this.graphComponent,
       layoutData: this.createLayoutData(incremental, incrementalNodes, fixedNode),
-      stopDuration: '300ms',
+      animationDuration: '300ms',
       animateViewport: fitViewport,
       updateContentBounds: true,
       targetBoundsPadding: defaultGraphFitInsets,

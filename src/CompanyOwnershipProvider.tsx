@@ -2,7 +2,12 @@ import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import { useGraphComponent, withGraphComponentProvider } from '@yworks/react-yfiles-core'
 import { CompanyOwnershipModel } from './CompanyOwnershipModel.ts'
 import { Graph, ViewportLimitingPolicy } from '@yfiles/yfiles'
-import { componentBackgroundColor, maximumZoom, minimumZoom } from './core/defaults.ts'
+import {
+  componentBackgroundColor,
+  defaultGraphFitInsets,
+  maximumZoom,
+  minimumZoom
+} from './core/defaults.ts'
 import { createCompanyOwnershipModel } from './CompanyOwnershipModelImpl.ts'
 import { LayoutSupport } from './core/LayoutSupport.ts'
 import { CompanyOwnership } from './CompanyOwnership.tsx'
@@ -112,6 +117,8 @@ export const CompanyOwnershipProvider = withGraphComponentProvider(
       graphComponent.htmlElement.style.backgroundColor = componentBackgroundColor
 
       graphComponent.viewportLimiter.policy = ViewportLimitingPolicy.WITHIN_MARGINS
+      graphComponent.viewportLimiter.viewportContentMargins = defaultGraphFitInsets.getEnlarged(20)
+
       graphComponent.maximumZoom = maximumZoom
       graphComponent.minimumZoom = minimumZoom
 

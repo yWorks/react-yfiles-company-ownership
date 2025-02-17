@@ -47,8 +47,6 @@ export function initializeHover<TEntity extends Entity | Connection>(
 ) {
   const inputMode = graphComponent.inputMode as GraphViewerInputMode
   inputMode.itemHoverInputMode.hoverItems = GraphItemTypes.NODE | GraphItemTypes.EDGE
-  // Do not report "null" for ignored hovered items.
-  inputMode.itemHoverInputMode.ignoreInvalidItems = false
 
   const hoverItemChangedListener: (evt: HoveredItemChangedEventArgs) => void = ({
     item,
@@ -116,7 +114,7 @@ export function initializeSelection<TEntity extends Entity | Connection>(
  * Initializes the highlights for selected or focused elements.
  */
 export function initializeHighlights(graphComponent: GraphComponent): void {
-  graphComponent.selectionIndicatorManager.enabled = false
+  graphComponent.graph.decorator.nodes.selectionRenderer.hide()
 
   // Hide the default focus highlight in favor of the CSS highlighting from the template styles
   graphComponent.graph.decorator.nodes.focusRenderer.hide()
