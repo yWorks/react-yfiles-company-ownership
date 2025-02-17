@@ -190,7 +190,7 @@ export class LayoutSupport {
       messageHandler: webWorkerMessageHandler,
       graphComponent: this.graphComponent,
       layoutData: this.createLayoutData(incremental, incrementalNodes, fixedNode),
-      stopDuration: '300ms',
+      animationDuration: '300ms',
       animateViewport: fitViewport,
       updateContentBounds: true,
       targetBoundsPadding: defaultGraphFitInsets,
