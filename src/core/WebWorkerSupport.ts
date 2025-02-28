@@ -6,6 +6,7 @@ import {
   HierarchicalLayoutEdgeDescriptor,
   HierarchicalLayoutRoutingStyle,
   ILayoutAlgorithm,
+  LayoutAnchoringPolicy,
   LayoutAnchoringStage,
   LayoutAnchoringStageData,
   LayoutExecutorAsyncWorker,
@@ -62,7 +63,7 @@ export function createLayout(incremental: boolean, layoutOptions: LayoutOptions)
 }
 
 function createLayoutData() {
-  return new LayoutAnchoringStageData({ nodeAnchoringPolicies: 'upper-left' })
+  return new LayoutAnchoringStageData({ nodeAnchoringPolicies: LayoutAnchoringPolicy.UPPER_LEFT })
 }
 
 function applyLayout(graph: LayoutGraph, incremental: boolean, layoutOptions: LayoutOptions): void {
