@@ -1,5 +1,5 @@
 import { LayoutOptions } from '../CompanyOwnership.tsx'
-import { Arrow, ArrowType, IArrow, Insets, PolylineEdgeStyle, PortAdjustmentPolicy } from 'yfiles'
+import { Arrow, ArrowType, Insets, PolylineEdgeStyle, PortAdjustmentPolicy } from '@yfiles/yfiles'
 
 export const componentBackgroundColor = 'rgb(238,238,238)'
 export const maximumZoom = 4
@@ -31,7 +31,7 @@ export const defaultOwnershipEdgeStyle = new PolylineEdgeStyle({
     stroke: defaultOwnershipEdgeColor,
     fill: defaultOwnershipEdgeColor
   }),
-  sourceArrow: IArrow.NONE,
+  sourceArrow: new Arrow(ArrowType.NONE),
   stroke: `${defaultEdgeWidth} ${defaultOwnershipEdgeColor}`,
   smoothingLength: defaultOwnershipEdgeSmoothingLength,
   cssClass: 'yfiles-react-ownership-connection'
@@ -42,7 +42,7 @@ export const defaultRelationEdgeStyle = new PolylineEdgeStyle({
     stroke: defaultRelationEdgeColor,
     fill: defaultRelationEdgeColor
   }),
-  sourceArrow: IArrow.NONE,
+  sourceArrow: new Arrow(ArrowType.NONE),
   stroke: `${defaultEdgeWidth} dashed ${defaultRelationEdgeColor}`,
   smoothingLength: defaultRelationEdgeSmoothingLength,
   cssClass: 'yfiles-react-relation-connection'

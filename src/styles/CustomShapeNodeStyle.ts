@@ -1,5 +1,4 @@
 import {
-  DashStyle,
   Fill,
   GeneralPath,
   GeneralPathNodeStyle,
@@ -10,7 +9,7 @@ import {
   Rect,
   Stroke,
   type Visual
-} from 'yfiles'
+} from '@yfiles/yfiles'
 import { EntityType } from '../CompanyOwnership.tsx'
 
 /**
@@ -75,10 +74,10 @@ export class CustomShapeNodeStyle extends NodeStyleBase {
         break
       case 'PE_Risk':
         this.gpNodeStyle.stroke = new Stroke({
-          fill: this.stroke.fill,
-          dashStyle: DashStyle.DASH,
-          lineCap: 'square',
-          thickness: 2
+          fill: this.stroke.fill!,
+          thickness: 2,
+          dashStyle: 'dash',
+          lineCap: 'square'
         })
         this.gpNodeStyle.stroke.freeze()
         gp = createPeRiskPath()

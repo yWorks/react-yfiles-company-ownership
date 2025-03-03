@@ -1,4 +1,4 @@
-import { FilteredGraphWrapper, GraphComponent, IGraph, INode } from 'yfiles'
+import { FilteredGraphWrapper, GraphComponent, IGraph, INode } from '@yfiles/yfiles'
 import { type ExportSettings, type PrintSettings } from '@yworks/react-yfiles-core'
 import { Connection, Entity, EntityId } from './CompanyOwnership.tsx'
 import { LayoutSupport } from './core/LayoutSupport.ts'

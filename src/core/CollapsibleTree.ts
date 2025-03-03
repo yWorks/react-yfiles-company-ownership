@@ -1,5 +1,5 @@
 import {
-  DefaultGraph,
+  Graph,
   delegate,
   FilteredGraphWrapper,
   type GraphComponent,
@@ -12,7 +12,7 @@ import {
   PlaceNodesAtBarycenterStageData,
   TraversalDirection,
   TreeLayout
-} from 'yfiles'
+} from '@yfiles/yfiles'
 import { getFilteredGraphWrapper } from '../CompanyOwnershipModel.ts'
 import { getNeighborhoodIndicatorManager } from './NeighborhoodIndicatorManager.ts'
 import { LayoutSupport } from './LayoutSupport.ts'
@@ -43,7 +43,7 @@ export class CollapsibleTree {
 
   constructor(
     private readonly _graphComponent: GraphComponent,
-    readonly completeGraph: IGraph = new DefaultGraph(),
+    readonly completeGraph: IGraph = new Graph(),
     private readonly layoutSupport: LayoutSupport
   ) {
     const nodeFilter = (node: INode): boolean =>
@@ -449,7 +449,7 @@ export class CollapsibleTree {
     const genealogy = new Set<INode>()
     resultNodes.forEach(node => {
       genealogy.add(node)
-      groupingSupport.getPathToRoot(node).forEach(parent => genealogy.add(parent))
+      groupingSupport.getAncestors(node).forEach(parent => genealogy.add(parent))
     })
 
     // hide any node that is not part of the genealogy

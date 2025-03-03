@@ -1,4 +1,4 @@
-import type { IEdge, INode } from 'yfiles'
+import type { IEdge, INode } from '@yfiles/yfiles'
 import { Entity, Connection } from '../CompanyOwnership.tsx'
 
 /**

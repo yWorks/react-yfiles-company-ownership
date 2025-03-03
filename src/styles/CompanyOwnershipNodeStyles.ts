@@ -1,4 +1,10 @@
-import { DefaultLabelStyle, type INodeStyle, InteriorLabelModel, LabelDefaults, Size } from 'yfiles'
+import {
+  LabelStyle,
+  type INodeStyle,
+  InteriorNodeLabelModel,
+  LabelDefaults,
+  Size
+} from '@yfiles/yfiles'
 import { CustomShapeNodeStyle } from './CustomShapeNodeStyle.ts'
 import { Entity } from '../CompanyOwnership.tsx'
 
@@ -11,14 +17,14 @@ export function getNodeStyle(item: Entity): INodeStyle {
 }
 
 // configures the style of the node labels
-export const nodeLabelStyle = new DefaultLabelStyle({
-  wrapping: 'word-ellipsis',
+export const nodeLabelStyle = new LabelStyle({
+  wrapping: 'wrap-word-ellipsis',
   horizontalTextAlignment: 'center',
   verticalTextAlignment: 'center'
 })
 
 // configures the node label parameter
-export const nodeLabelParameter = InteriorLabelModel.CENTER
+export const nodeLabelParameter = InteriorNodeLabelModel.CENTER
 
 // configures the node label size (used for wrapping)
 export const labelSizeDefaults = new Size(80, 60)

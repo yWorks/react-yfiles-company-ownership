@@ -1,48 +1,53 @@
 import {
-  AsIsLayerer,
   ComponentArrangementPolicy,
-  FixNodeLayoutStage,
-  GroupCompactionPolicy,
-  HierarchicLayout,
-  HierarchicLayoutRoutingStyle,
+  EdgeLabelPlacement,
+  FromSketchLayerAssigner,
+  HierarchicalLayout,
+  HierarchicalLayoutEdgeDescriptor,
+  HierarchicalLayoutRoutingStyle,
   ILayoutAlgorithm,
+  LayoutAnchoringPolicy,
+  LayoutAnchoringStage,
+  LayoutAnchoringStageData,
   LayoutExecutorAsyncWorker,
   LayoutGraph,
   License,
-  SimplexNodePlacer
-} from 'yfiles'
+  RoutingStyleDescriptor
+} from '@yfiles/yfiles'
 import { LayoutOptions } from '../CompanyOwnership.tsx'
 import { defaultLayoutOptions } from './defaults.ts'
 
 export function createLayout(incremental: boolean, layoutOptions: LayoutOptions): ILayoutAlgorithm {
-  let layout = new HierarchicLayout({
+  let layout = new HierarchicalLayout({
+    defaultEdgeDescriptor: new HierarchicalLayoutEdgeDescriptor({
+      routingStyleDescriptor: new RoutingStyleDescriptor(HierarchicalLayoutRoutingStyle.POLYLINE)
+    }),
     layoutOrientation: layoutOptions.direction ?? defaultLayoutOptions.direction,
-    integratedEdgeLabeling: true
+    edgeLabelPlacement: EdgeLabelPlacement.INTEGRATED
   })
 
-  layout.layoutMode = incremental ? 'incremental' : 'from-scratch'
+  layout.fromSketchMode = incremental
 
-  layout.nodeLayoutDescriptor.layerAlignment = 0
+  layout.defaultNodeDescriptor.layerAlignment = 0
 
-  layout.edgeLayoutDescriptor.minimumFirstSegmentLength =
+  layout.defaultEdgeDescriptor.minimumFirstSegmentLength =
     layoutOptions.minimumFirstSegmentLength ?? defaultLayoutOptions.minimumFirstSegmentLength!
-  layout.edgeLayoutDescriptor.minimumLastSegmentLength =
+  layout.defaultEdgeDescriptor.minimumLastSegmentLength =
     layoutOptions.minimumLastSegmentLength ?? defaultLayoutOptions.minimumLastSegmentLength!
-  layout.edgeLayoutDescriptor.routingStyle = new HierarchicLayoutRoutingStyle({
+  layout.defaultEdgeDescriptor.routingStyleDescriptor = new RoutingStyleDescriptor({
     routingStyle: layoutOptions.routingStyle ?? defaultLayoutOptions.routingStyle!
   })
 
   // do not expand group node vertically
-  layout.compactGroups = true
-  const nodePlacer = layout.nodePlacer as SimplexNodePlacer
-  nodePlacer.groupCompactionStrategy = GroupCompactionPolicy.MAXIMAL
+  layout.coordinateAssigner.groupCompaction = true
+
   if (incremental) {
-    layout.fixedElementsLayerer = new AsIsLayerer({
+    layout.core.fixedElementsLayerAssigner = new FromSketchLayerAssigner({
       maximumNodeSize: 10
     })
   }
 
-  layout.maximumDuration =
+  layout.stopDuration =
     layoutOptions.maximumDuration ??
     defaultLayoutOptions.maximumDuration ??
     Number.POSITIVE_INFINITY
@@ -52,12 +57,19 @@ export function createLayout(incremental: boolean, layoutOptions: LayoutOptions)
 
   layout.componentArrangementPolicy = ComponentArrangementPolicy.COMPACT
 
-  return new FixNodeLayoutStage({ coreLayout: layout, fixPointPolicy: 'upper-left' })
+  return new LayoutAnchoringStage({
+    coreLayout: layout
+  })
+}
+
+function createLayoutData() {
+  return new LayoutAnchoringStageData({ nodeAnchoringPolicies: LayoutAnchoringPolicy.UPPER_LEFT })
 }
 
 function applyLayout(graph: LayoutGraph, incremental: boolean, layoutOptions: LayoutOptions): void {
   const layout = createLayout(incremental, layoutOptions)
-  layout.applyLayout(graph)
+  const layoutData = createLayoutData()
+  graph.applyLayout(layout, layoutData)
 }
 
 /**

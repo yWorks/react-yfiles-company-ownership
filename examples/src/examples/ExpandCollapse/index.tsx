@@ -27,12 +27,20 @@ function RenderEntity(props: RenderEntityProps<Entity>) {
     <div className="company-ownership-item">
       <div className="buttons-container">
         {canHidePredecessors(item) && (
-          <button onClick={() => hidePredecessors(item)} title={'Hide Predecessors'}>
+          <button
+            onClick={() => hidePredecessors(item)}
+            onPointerDown={e => e.stopPropagation()}
+            title={'Hide Predecessors'}
+          >
             -
           </button>
         )}
         {canShowPredecessors(item) && (
-          <button onClick={() => showPredecessors(item)} title={'Show Predecessors'}>
+          <button
+            onClick={() => showPredecessors(item)}
+            onPointerDown={e => e.stopPropagation()}
+            title={'Show Predecessors'}
+          >
             +
           </button>
         )}
@@ -48,12 +56,20 @@ function RenderEntity(props: RenderEntityProps<Entity>) {
 
       <div className="buttons-container">
         {canHideSuccessors(item) && (
-          <button onClick={() => hideSuccessors(item)} title={'Hide Successors'}>
+          <button
+            onClick={() => hideSuccessors(item)}
+            onPointerDown={e => e.stopPropagation()}
+            title={'Hide Successors'}
+          >
             -
           </button>
         )}
         {canShowSuccessors(item) && (
-          <button onClick={() => showSuccessors(item)} title={'Show Successors'}>
+          <button
+            onClick={() => showSuccessors(item)}
+            onPointerDown={e => e.stopPropagation()}
+            title={'Show Successors'}
+          >
             +
           </button>
         )}
