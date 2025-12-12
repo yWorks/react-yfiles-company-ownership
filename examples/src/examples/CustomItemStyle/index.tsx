@@ -23,6 +23,7 @@ import Branch from '@mui/icons-material/AccountTree'
 import Cog from '@mui/icons-material/Settings'
 
 import data from '../../data/company-data.json'
+import { JSX } from 'react'
 
 function getCountryCode(jurisdiction: string | undefined): string {
   switch (jurisdiction) {

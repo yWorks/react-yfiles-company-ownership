@@ -23,7 +23,7 @@ import Branch from '@mui/icons-material/AccountTree'
 import Cog from '@mui/icons-material/Settings'
 
 import data from '../../data/company-data.json'
-import { ComponentType, useState } from 'react'
+import { ComponentType, JSX, useState } from 'react'
 import { RenderNodeProps } from '@yworks/react-yfiles-core'
 
 function getCountryCode(jurisdiction: string | undefined): string {
