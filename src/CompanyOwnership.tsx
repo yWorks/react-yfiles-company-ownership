@@ -273,7 +273,7 @@ export type LayoutDirection = 'left-to-right' | 'right-to-left' | 'top-to-bottom
 
 /**
  * Style describing the visual representation of an edge in the graph.
- * See {@link https://docs.yworks.com/yfileshtml/#/api/HierarchicLayoutEdgeRoutingStyle}
+ * See {@link https://docs.yworks.com/yfileshtml/#/api/HierarchicalLayoutEdgeRoutingStyle}
  */
 export type EdgeRoutingStyle = 'orthogonal' | 'curved' | 'octilinear' | 'polyline'
 

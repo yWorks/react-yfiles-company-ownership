@@ -1,6 +1,6 @@
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import { useGraphComponent, withGraphComponentProvider } from '@yworks/react-yfiles-core'
-import { CompanyOwnershipModel } from './CompanyOwnershipModel.ts'
+import { CompanyOwnershipModel, CompanyOwnershipModelInternal } from './CompanyOwnershipModel.ts'
 import { Graph, ViewportLimitingPolicy } from '@yfiles/yfiles'
 import {
   componentBackgroundColor,
@@ -113,6 +113,13 @@ export const CompanyOwnershipProvider = withGraphComponentProvider(
     }
 
     const CompanyOwnership = useMemo(() => {
+      const previousModel = graphComponent.htmlElement['companyOwnerhsip'] as
+        | CompanyOwnershipModelInternal
+        | undefined
+
+      if (previousModel) {
+        return previousModel
+      }
       const fullGraph = new Graph()
       graphComponent.htmlElement.style.backgroundColor = componentBackgroundColor
 
@@ -123,9 +130,16 @@ export const CompanyOwnershipProvider = withGraphComponentProvider(
       graphComponent.minimumZoom = minimumZoom
 
       const layoutSupport = new LayoutSupport(graphComponent)
+
       const collapsibleTree = new CollapsibleTree(graphComponent, fullGraph, layoutSupport)
       graphComponent.graph = collapsibleTree.filteredGraph
-      return createCompanyOwnershipModel(graphComponent, collapsibleTree, layoutSupport)
+      const companyOwnerShipModel = createCompanyOwnershipModel(
+        graphComponent,
+        collapsibleTree,
+        layoutSupport
+      )
+      graphComponent.htmlElement['companyOwnerhsip'] = companyOwnerShipModel
+      return companyOwnerShipModel
     }, [])
 
     return (
