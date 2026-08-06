@@ -10,6 +10,16 @@ for displaying company ownership charts in your React applications.
 
 ## Getting Started
 
+### AI-Powered Setup
+
+If you are using an AI-powered development environment or an LLM-based agent, you can accelerate the setup process by providing the following prompt:
+
+```text
+fetch the https://docs.yworks.com/react-yfiles-company-ownership/ai/agent-start.md and follow its instructions
+```
+
+This will guide the agent to install the necessary dependencies and set up the specialized agent skill for company ownership diagrams.
+
 ### Prerequisites
 
 To use the Company Ownership component, [yFiles for HTML](https://www.yworks.com/products/yfiles-for-html) is required.
