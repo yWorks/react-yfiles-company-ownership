@@ -5,9 +5,6 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: './',
   plugins: [react()],
-  build: {
-    target: 'ES2023'
-  },
   resolve: {
     dedupe: ['react', 'react-dom']
   }
