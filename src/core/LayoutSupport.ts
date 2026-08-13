@@ -4,13 +4,13 @@ import {
   INode,
   LayoutAnchoringPolicy,
   LayoutAnchoringStageData,
-  LayoutData,
+  type LayoutData,
   LayoutExecutor,
   LayoutExecutorAsync,
-  Rect
+  type Rect
 } from '@yfiles/yfiles'
-import { LayoutOptions } from '../CompanyOwnership.tsx'
-import { Dispatch, SetStateAction } from 'react'
+import type { LayoutOptions } from '../CompanyOwnership.tsx'
+import type { Dispatch, SetStateAction } from 'react'
 import {
   defaultGraphFitInsets,
   defaultLayoutOptions,
@@ -45,13 +45,16 @@ export class LayoutSupport {
 
     if (incremental) {
       layoutData = new HierarchicalLayoutData({
-        incrementalNodes: node => node instanceof INode && incrementalNodes.includes(node)
+        incrementalNodes: (node: INode): boolean =>
+          node instanceof INode && incrementalNodes.includes(node)
       })
     }
 
     if (fixedNode) {
       const fixNodeLayoutData = new LayoutAnchoringStageData()
-      fixNodeLayoutData.nodeAnchoringPolicies.mapperFunction = key =>
+      fixNodeLayoutData.nodeAnchoringPolicies.mapperFunction = (
+        key: INode
+      ): LayoutAnchoringPolicy =>
         key === fixedNode ? LayoutAnchoringPolicy.CENTER : LayoutAnchoringPolicy.NONE
       if (!layoutData) {
         layoutData = new HierarchicalLayoutData()
@@ -111,7 +114,7 @@ export class LayoutSupport {
    * with now obsolete node sizes - stop the running animation and restore
    * the latest measured node sizes.
    */
-  private async maybeCancel() {
+  private async maybeCancel(): Promise<void> {
     const syncRunning = this.executor && this.executor.running
     const asyncRunning = this.executorAsync && this.executorAsync.running
     if (syncRunning || asyncRunning) {
@@ -171,7 +174,7 @@ export class LayoutSupport {
       data.incremental = incremental
       data.layoutOptions = this.layoutOptions
       return new Promise((resolve, reject) => {
-        worker.onmessage = e => {
+        worker.onmessage = (e: MessageEvent): void => {
           // don't resolve cancelled requests
           if (e.data && thisRequest === e.data.token) {
             if (e.data.name === 'AlgorithmAbortedError') {

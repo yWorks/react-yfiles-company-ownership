@@ -1,5 +1,5 @@
 import type { IEdge, INode } from '@yfiles/yfiles'
-import { Entity, Connection } from '../CompanyOwnership.tsx'
+import type { Entity, Connection } from '../CompanyOwnership.tsx'
 
 /**
  * Type of data associated with a node.

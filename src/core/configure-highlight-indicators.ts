@@ -1,18 +1,18 @@
 import {
   Arrow,
   EdgeStyleIndicatorRenderer,
-  GraphComponent,
-  GraphViewerInputMode,
-  IEdge,
-  IEdgeStyle,
+  type GraphComponent,
+  type GraphViewerInputMode,
+  type IEdge,
+  type IEdgeStyle,
   type IModelItem,
-  INodeStyle,
+  type INodeStyle,
   NodeStyleIndicatorRenderer,
   PolylineEdgeStyle,
   ShapeNodeStyle
 } from '@yfiles/yfiles'
 import { hoverHighlightColor, selectionHighlightColor } from './defaults.ts'
-import { HighlightOptions } from '../CompanyOwnership.tsx'
+import type { HighlightOptions } from '../CompanyOwnership.tsx'
 
 /**
  * Adds or removes a CSS class to highlight the given item.
@@ -59,7 +59,7 @@ function getHighlightNodeStyle(color: string, cssClass: string): INodeStyle {
 export function initializeHoverHighlighting(
   graphComponent: GraphComponent,
   inputMode: GraphViewerInputMode
-) {
+): void {
   // show the indicators on hover
   inputMode.itemHoverInputMode.addEventListener('hovered-item-changed', ({ item, oldItem }) => {
     void highlightItem(graphComponent, oldItem, false)
@@ -70,7 +70,7 @@ export function initializeHoverHighlighting(
 export function configureIndicatorStyling(
   graphComponent: GraphComponent,
   highlightOptions?: HighlightOptions
-) {
+): void {
   const selectionColor = highlightOptions?.selectionHighlightColor ?? selectionHighlightColor
   const selectionClass = highlightOptions?.selectionHighlightCssClass ?? ''
   const hoverColor = highlightOptions?.hoverHighlightColor ?? hoverHighlightColor

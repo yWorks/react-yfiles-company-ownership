@@ -5,16 +5,17 @@ import {
   HierarchicalLayout,
   HierarchicalLayoutEdgeDescriptor,
   HierarchicalLayoutRoutingStyle,
-  ILayoutAlgorithm,
+  type ILayoutAlgorithm,
   LayoutAnchoringPolicy,
   LayoutAnchoringStage,
   LayoutAnchoringStageData,
+  type LayoutData,
   LayoutExecutorAsyncWorker,
-  LayoutGraph,
+  type LayoutGraph,
   License,
   RoutingStyleDescriptor
 } from '@yfiles/yfiles'
-import { LayoutOptions } from '../CompanyOwnership.tsx'
+import type { LayoutOptions } from '../CompanyOwnership.tsx'
 import { defaultLayoutOptions } from './defaults.ts'
 
 export function createLayout(incremental: boolean, layoutOptions: LayoutOptions): ILayoutAlgorithm {
@@ -62,7 +63,7 @@ export function createLayout(incremental: boolean, layoutOptions: LayoutOptions)
   })
 }
 
-function createLayoutData() {
+function createLayoutData(): LayoutData {
   return new LayoutAnchoringStageData({ nodeAnchoringPolicies: LayoutAnchoringPolicy.UPPER_LEFT })
 }
 
@@ -96,7 +97,7 @@ function applyLayout(graph: LayoutGraph, incremental: boolean, layoutOptions: La
  * return <CompanyOwnership data={data} layoutWorker={layoutWorker}></CompanyOwnership>
  * ```
  */
-export function initializeWebWorker(self: Window) {
+export function initializeWebWorker(self: Window): void {
   self.addEventListener(
     'message',
     e => {

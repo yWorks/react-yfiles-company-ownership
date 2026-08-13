@@ -1,30 +1,33 @@
 import {
-  LabelStyle,
-  EdgesSource,
+  type EdgesSource,
   GraphBuilder,
-  IEdge,
+  type IEdge,
+  type IEdgeStyle,
   type IGraph,
+  type ILabelStyle,
   type INode,
-  NodesSource
+  type INodeStyle,
+  LabelStyle,
+  type NodesSource
 } from '@yfiles/yfiles'
-import {
-  Connection,
+import type {
   CompanyOwnershipData,
-  Entity,
+  Connection,
   ConnectionLabelProvider,
   ConnectionStyleProvider,
+  Entity,
   EntityLabelProvider,
   Ownership,
   SimpleLabel
 } from '../CompanyOwnership.tsx'
 import {
   convertToPolylineEdgeStyle,
-  NodeRenderInfo,
+  type NodeRenderInfo,
   ReactComponentHtmlNodeStyle,
   RenderNodeProps as RenderEntityProps
 } from '@yworks/react-yfiles-core'
-import { ComponentType, Dispatch, SetStateAction } from 'react'
-import { CompanyOwnershipModel, getNode } from '../CompanyOwnershipModel.ts'
+import type { ComponentType, Dispatch, SetStateAction } from 'react'
+import { type CompanyOwnershipModel, getNode } from '../CompanyOwnershipModel.ts'
 import { getNodeStyle } from '../styles/CompanyOwnershipNodeStyles.ts'
 import { defaultOwnershipEdgeStyle, defaultRelationEdgeStyle } from './defaults.ts'
 
@@ -48,7 +51,7 @@ export class GraphManager<TEntity extends Entity, TConnection extends Connection
     connectionStyleProvider?: ConnectionStyleProvider<TEntity, TConnection>,
     connectionLabelProvider?: ConnectionLabelProvider<TConnection>,
     itemLabelProvider?: EntityLabelProvider<TEntity>
-  ) {
+  ): void {
     const nodeData = data.companies
     const connectionsData = data.connections
 
@@ -71,7 +74,7 @@ export class GraphManager<TEntity extends Entity, TConnection extends Connection
     if (connectionLabelProvider) {
       this.connectionLabelProvider = connectionLabelProvider
     } else {
-      this.connectionLabelProvider = item => {
+      this.connectionLabelProvider = (item: TConnection): { text: string } | undefined => {
         return item.type === 'Ownership' && typeof (item as Ownership).ownership !== 'undefined'
           ? {
               text: String((item as Ownership).ownership)
@@ -82,7 +85,7 @@ export class GraphManager<TEntity extends Entity, TConnection extends Connection
     if (itemLabelProvider) {
       this.itemLabelProvider = itemLabelProvider
     } else {
-      this.itemLabelProvider = item => {
+      this.itemLabelProvider = (item: TEntity): { text: string } => {
         return item.name
           ? {
               text: item.name
@@ -121,7 +124,7 @@ export function initializeGraphManager<TEntity extends Entity, TConnection exten
 
   const edgeCreator = edgesSource.edgeCreator
 
-  edgeCreator.styleProvider = edge => {
+  edgeCreator.styleProvider = (edge: TConnection): IEdgeStyle => {
     if (graphManager.connectionStyleProvider) {
       const edgeStyle = graphManager.connectionStyleProvider({
         source: graphManager.nodeData.find(item => item.id === edge.sourceId)!,
@@ -137,9 +140,9 @@ export function initializeGraphManager<TEntity extends Entity, TConnection exten
 
   const labelBinding = edgeCreator.createLabelBinding()
 
-  labelBinding.textProvider = dataItem =>
+  labelBinding.textProvider = (dataItem: TConnection): string | null =>
     getConnectionLabelText(companyOwnershipModel, dataItem, graphManager.connectionLabelProvider)
-  labelBinding.styleProvider = dataItem =>
+  labelBinding.styleProvider = (dataItem: TConnection): ILabelStyle | null =>
     getConnectionLabelStyle(companyOwnershipModel, dataItem, graphManager.connectionLabelProvider)
 
   labelBinding.addEventListener('label-updated', evt =>
@@ -149,7 +152,7 @@ export function initializeGraphManager<TEntity extends Entity, TConnection exten
   const nodesSource = graphBuilder.createNodesSource<TEntity>([], 'id')
   const nodeCreator = nodesSource.nodeCreator
 
-  nodeCreator.styleProvider = dataItem => {
+  nodeCreator.styleProvider = (dataItem: TEntity): INodeStyle => {
     if (graphManager.renderEntities) {
       return new ReactComponentHtmlNodeStyle(
         graphManager.renderEntities,
@@ -164,9 +167,9 @@ export function initializeGraphManager<TEntity extends Entity, TConnection exten
     // adds the node labels if the shape node style is selected
     const nameLabelBinding = nodeCreator.createLabelBinding()
 
-    nameLabelBinding.textProvider = dataItem =>
+    nameLabelBinding.textProvider = (dataItem: TEntity): string | null =>
       getItemLabelText(companyOwnershipModel, dataItem, graphManager.itemLabelProvider)
-    nameLabelBinding.styleProvider = dataItem =>
+    nameLabelBinding.styleProvider = (dataItem: TEntity): ILabelStyle | null =>
       getItemLabelStyle(companyOwnershipModel, dataItem, graphManager.itemLabelProvider)
 
     nameLabelBinding.addEventListener('label-updated', evt =>

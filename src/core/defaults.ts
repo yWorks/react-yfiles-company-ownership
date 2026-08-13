@@ -1,4 +1,4 @@
-import { LayoutOptions } from '../CompanyOwnership.tsx'
+import type { LayoutOptions } from '../CompanyOwnership.tsx'
 import { Arrow, ArrowType, Insets, PolylineEdgeStyle, PortAdjustmentPolicy } from '@yfiles/yfiles'
 
 export const componentBackgroundColor = 'rgb(238,238,238)'

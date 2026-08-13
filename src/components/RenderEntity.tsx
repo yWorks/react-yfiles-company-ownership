@@ -1,12 +1,12 @@
-import { UserEntity, Entity, CompanyOwnership } from '../CompanyOwnership.tsx'
+import type { Entity, UserEntity } from '../CompanyOwnership.tsx'
 import {
-  getUserProperties,
   getHighlightClasses,
-  stringifyData,
-  getNodeClass
+  getNodeClass,
+  getUserProperties,
+  stringifyData
 } from './template-utils.ts'
 import { RenderNodeProps as RenderEntityProps } from '@yworks/react-yfiles-core'
-import { Fragment } from 'react'
+import { Fragment, type JSX } from 'react'
 
 /**
  * A default component that visualizes entities in the company ownership diagram.
@@ -57,7 +57,7 @@ export function RenderEntity<TEntity extends Entity>({
   hovered,
   focused,
   selected
-}: RenderEntityProps<TEntity>) {
+}: RenderEntityProps<TEntity>): JSX.Element {
   const customCompanyOwnershipItem = dataItem as UserEntity
   const properties = getUserProperties(customCompanyOwnershipItem)
   const companyType = customCompanyOwnershipItem.type ?? 'Unknown'

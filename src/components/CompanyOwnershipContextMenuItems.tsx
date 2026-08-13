@@ -1,5 +1,5 @@
-import { Connection, Entity } from '../CompanyOwnership.tsx'
-import { ContextMenuItem } from '@yworks/react-yfiles-core'
+import type { Connection, Entity } from '../CompanyOwnership.tsx'
+import type { ContextMenuItem, ContextMenuProps } from '@yworks/react-yfiles-core'
 import { useCompanyOwnershipContext } from '../CompanyOwnershipProvider.tsx'
 
 /**

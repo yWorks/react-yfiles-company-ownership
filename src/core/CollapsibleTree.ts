@@ -5,7 +5,7 @@ import {
   type GraphComponent,
   type IEnumerable,
   type IGraph,
-  INode,
+  type INode,
   type IPort,
   Neighborhood,
   PlaceNodesAtBarycenterStage,
@@ -15,7 +15,7 @@ import {
 } from '@yfiles/yfiles'
 import { getFilteredGraphWrapper } from '../CompanyOwnershipModel.ts'
 import { getNeighborhoodIndicatorManager } from './NeighborhoodIndicatorManager.ts'
-import { LayoutSupport } from './LayoutSupport.ts'
+import type { LayoutSupport } from './LayoutSupport.ts'
 
 /**
  * A graph wrapper that can hide and show parts of a tree and keeps the layout up to date.
@@ -427,7 +427,7 @@ export class CollapsibleTree {
     this.collapsedStateUpdatedListener?.(port, collapsed)
   }
 
-  executeShowGenealogy(node: INode) {
+  executeShowGenealogy(node: INode): void {
     const graph = this.graphComponent.graph
     const filteredGraphWrapper = getFilteredGraphWrapper(this.graphComponent)
 

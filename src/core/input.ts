@@ -2,13 +2,13 @@ import {
   type GraphComponent,
   GraphItemTypes,
   GraphViewerInputMode,
-  HoveredItemChangedEventArgs,
+  type HoveredItemChangedEventArgs,
   IEdge,
   INode
 } from '@yfiles/yfiles'
 import { geTEntity } from './data-loading'
-import { CompanyOwnershipModel } from '../CompanyOwnershipModel.ts'
-import { Connection, Entity } from '../CompanyOwnership.tsx'
+import type { CompanyOwnershipModel } from '../CompanyOwnershipModel.ts'
+import type { Connection, Entity } from '../CompanyOwnership.tsx'
 import { initializeHoverHighlighting } from './configure-highlight-indicators.ts'
 
 /**
@@ -44,7 +44,7 @@ export function initializeInputMode(
 export function initializeHover<TEntity extends Entity | Connection>(
   onHover: ((item: TEntity | null, oldItem?: TEntity | null) => void) | undefined,
   graphComponent: GraphComponent
-) {
+): (evt: HoveredItemChangedEventArgs) => void {
   const inputMode = graphComponent.inputMode as GraphViewerInputMode
   inputMode.itemHoverInputMode.hoverItems = GraphItemTypes.NODE | GraphItemTypes.EDGE
 
@@ -68,11 +68,11 @@ export function initializeHover<TEntity extends Entity | Connection>(
 export function initializeFocus<TEntity extends Entity | Connection>(
   onFocus: ((item: TEntity | null) => void) | undefined,
   graphComponent: GraphComponent
-) {
-  let currentItemChangedListener = () => {}
+): () => void {
+  let currentItemChangedListener = (): void => {}
   if (onFocus) {
     // display information about the current item
-    currentItemChangedListener = () => {
+    currentItemChangedListener = (): void => {
       const currentItem = graphComponent.currentItem
       if (currentItem instanceof INode) {
         onFocus(geTEntity<TEntity>(currentItem))
@@ -92,11 +92,11 @@ export function initializeFocus<TEntity extends Entity | Connection>(
 export function initializeSelection<TEntity extends Entity | Connection>(
   onSelect: ((selectedItems: TEntity[]) => void) | undefined,
   graphComponent: GraphComponent
-) {
-  let itemSelectionChangedListener = () => {}
+): () => void {
+  let itemSelectionChangedListener = (): void => {}
   if (onSelect) {
     // display information about the current item
-    itemSelectionChangedListener = () => {
+    itemSelectionChangedListener = (): void => {
       onSelect(
         graphComponent.selection
           .filter(element => element instanceof IEdge || element instanceof INode)

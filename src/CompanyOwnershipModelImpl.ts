@@ -1,9 +1,7 @@
-import { Connection, Entity, EntityId } from './CompanyOwnership.tsx'
-
-import { getNode, getNodeFromId, CompanyOwnershipModelInternal } from './CompanyOwnershipModel.ts'
-
-import { GraphComponent, Command, INode, Insets, MutableRectangle } from '@yfiles/yfiles'
-
+import type { Connection, Entity, EntityId } from './CompanyOwnership.tsx'
+import type { CompanyOwnershipModelInternal } from './CompanyOwnershipModel.ts'
+import { getNode, getNodeFromId } from './CompanyOwnershipModel.ts'
+import { Command, type GraphComponent, type INode, Insets, MutableRectangle } from '@yfiles/yfiles'
 import {
   exportImageAndSave,
   type ExportSettings,
@@ -11,12 +9,10 @@ import {
   printDiagram,
   type PrintSettings
 } from '@yworks/react-yfiles-core'
-
 import { getNeighborhoodIndicatorManager } from './core/NeighborhoodIndicatorManager.ts'
-
-import { LayoutSupport } from './core/LayoutSupport.ts'
+import type { LayoutSupport } from './core/LayoutSupport.ts'
 import { componentBackgroundColor, defaultExportMargins } from './core/defaults.ts'
-import { CollapsibleTree } from './core/CollapsibleTree.ts'
+import type { CollapsibleTree } from './core/CollapsibleTree.ts'
 
 export function createCompanyOwnershipModel(
   graphComponent: GraphComponent,
@@ -27,16 +23,16 @@ export function createCompanyOwnershipModel(
 
   // this is a hack, so we have something like `await nextTick()`
   // that we can use instead of `setTimeout()`
-  const setRenderedCallback = (cb: () => void) => {
+  const setRenderedCallback = (cb: () => void): void => {
     onRenderedCallback = cb
   }
 
-  const onRendered = () => {
+  const onRendered = (): void => {
     onRenderedCallback?.()
     onRenderedCallback = null
   }
 
-  function showGenealogy(item: Entity) {
+  function showGenealogy(item: Entity): void {
     const node = getNode(item, graphComponent.graph)
     if (node) {
       clearConnectedItemsHighlight()
@@ -53,7 +49,7 @@ export function createCompanyOwnershipModel(
     incrementalItems?: Entity[],
     fixedItem: Entity | null = null,
     fitViewport = false
-  ) {
+  ): Promise<void> {
     if (!layoutSupport) {
       return Promise.resolve()
     }
@@ -72,7 +68,7 @@ export function createCompanyOwnershipModel(
     return layoutSupport.runLayout(incremental ?? false, incrementalNodes, fixedNode, fitViewport)
   }
 
-  function highlightConnectedItems(item: Entity) {
+  function highlightConnectedItems(item: Entity): void {
     const startNode = getNode(item, graphComponent.graph)!
     if (!startNode) {
       // node is currently not visible in the view graph
@@ -83,17 +79,17 @@ export function createCompanyOwnershipModel(
     neighborhoodIndicatorManager.highlightNeighborhood(startNode)
   }
 
-  function canClearConnectedItemsHighlight() {
+  function canClearConnectedItemsHighlight(): boolean {
     const neighborhoodIndicatorManager = getNeighborhoodIndicatorManager(graphComponent)
     return neighborhoodIndicatorManager.items ? neighborhoodIndicatorManager.items.size > 0 : false
   }
 
-  function clearConnectedItemsHighlight() {
+  function clearConnectedItemsHighlight(): void {
     const neighborhoodIndicatorManager = getNeighborhoodIndicatorManager(graphComponent)
     neighborhoodIndicatorManager.clearHighlights()
   }
 
-  async function showAll() {
+  async function showAll(): Promise<void> {
     const neighborhoodHighlightManager = getNeighborhoodIndicatorManager(graphComponent)
     neighborhoodHighlightManager.clearHighlights()
 
@@ -104,23 +100,23 @@ export function createCompanyOwnershipModel(
     return collapsibleTree.canExecuteShowAll()
   }
 
-  function zoomIn() {
+  function zoomIn(): void {
     graphComponent.executeCommand(Command.INCREASE_ZOOM, null)
   }
 
-  function zoomOut() {
+  function zoomOut(): void {
     graphComponent.executeCommand(Command.DECREASE_ZOOM, null)
   }
 
-  function fitContent(insets: number = 0) {
+  function fitContent(insets: number = 0): void {
     graphComponent.fitGraphBounds(new Insets(insets), true)
   }
 
-  function zoomToOriginal() {
+  function zoomToOriginal(): void {
     graphComponent.executeCommand(Command.ZOOM, 1.0)
   }
 
-  async function exportToSvg(exportSettings: ExportSettings) {
+  async function exportToSvg(exportSettings: ExportSettings): Promise<void> {
     const settings = Object.assign(
       {
         zoom: graphComponent.zoom,
@@ -134,13 +130,13 @@ export function createCompanyOwnershipModel(
 
     const callback = _hasReactItems
       ? setRenderedCallback
-      : (resolve: () => void) => {
+      : (resolve: () => void): void => {
           resolve()
         }
     await exportSvgAndSave(settings, graphComponent, callback)
   }
 
-  async function exportToPng(exportSettings: ExportSettings) {
+  async function exportToPng(exportSettings: ExportSettings): Promise<void> {
     const settings = Object.assign(
       {
         zoom: graphComponent.zoom,
@@ -154,13 +150,13 @@ export function createCompanyOwnershipModel(
 
     const callback = _hasReactItems
       ? setRenderedCallback
-      : (resolve: () => void) => {
+      : (resolve: () => void): void => {
           resolve()
         }
     await exportImageAndSave(settings, graphComponent, callback)
   }
 
-  async function print(printSettings: PrintSettings) {
+  async function print(printSettings: PrintSettings): Promise<void> {
     const settings = Object.assign(
       {
         zoom: graphComponent.zoom,
@@ -172,7 +168,7 @@ export function createCompanyOwnershipModel(
     await printDiagram(settings, graphComponent)
   }
 
-  function refresh() {
+  function refresh(): void {
     graphComponent.invalidate()
   }
 
@@ -211,11 +207,11 @@ export function createCompanyOwnershipModel(
     )
   }
 
-  function addGraphUpdatedListener(listener: () => void) {
+  function addGraphUpdatedListener(listener: () => void): void {
     collapsibleTree.addGraphUpdatedListener(listener)
   }
 
-  function removeGraphUpdatedListener(listener: () => void) {
+  function removeGraphUpdatedListener(listener: () => void): void {
     collapsibleTree.removeGraphUpdatedListener(listener)
   }
 
@@ -223,7 +219,7 @@ export function createCompanyOwnershipModel(
     return collapsibleTree.graphComponent.graph.nodes.map(item => item.tag).toArray()
   }
 
-  async function showPredecessors(item: Entity) {
+  async function showPredecessors(item: Entity): Promise<void> {
     const node = getNode(item, graphComponent.graph)
     if (node) {
       const neighborhoodHighlightManager = getNeighborhoodIndicatorManager(graphComponent)
@@ -240,7 +236,7 @@ export function createCompanyOwnershipModel(
     return false
   }
 
-  async function hidePredecessors(item: Entity) {
+  async function hidePredecessors(item: Entity): Promise<void> {
     const node = getNode(item, graphComponent.graph)
     if (node) {
       const neighborhoodHighlightManager = getNeighborhoodIndicatorManager(graphComponent)
@@ -257,7 +253,7 @@ export function createCompanyOwnershipModel(
     return false
   }
 
-  async function showSuccessors(item: Entity) {
+  async function showSuccessors(item: Entity): Promise<void> {
     const node = getNode(item, graphComponent.graph)
     if (node) {
       const neighborhoodHighlightManager = getNeighborhoodIndicatorManager(graphComponent)
@@ -274,7 +270,7 @@ export function createCompanyOwnershipModel(
     return false
   }
 
-  async function hideSuccessors(item: Entity) {
+  async function hideSuccessors(item: Entity): Promise<void> {
     const node = getNode(item, graphComponent.graph)
     if (node) {
       const neighborhoodHighlightManager = getNeighborhoodIndicatorManager(graphComponent)
