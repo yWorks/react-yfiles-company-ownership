@@ -1,7 +1,7 @@
-import { FilteredGraphWrapper, GraphComponent, IGraph, INode } from '@yfiles/yfiles'
-import { type ExportSettings, type PrintSettings } from '@yworks/react-yfiles-core'
-import { Connection, Entity, EntityId } from './CompanyOwnership.tsx'
-import { LayoutSupport } from './core/LayoutSupport.ts'
+import type { FilteredGraphWrapper, GraphComponent, IGraph, INode } from '@yfiles/yfiles'
+import type { ExportSettings, PrintSettings } from '@yworks/react-yfiles-core'
+import type { Connection, Entity, EntityId } from './CompanyOwnership.tsx'
+import type { LayoutSupport } from './core/LayoutSupport.ts'
 
 /**
  * The CompanyOwnershipModel provides common functionality to interact with the {@link CompanyOwnership} component.

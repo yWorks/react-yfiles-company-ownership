@@ -10,7 +10,7 @@ import {
   Stroke,
   type Visual
 } from '@yfiles/yfiles'
-import { EntityType } from '../CompanyOwnership.tsx'
+import type { EntityType } from '../CompanyOwnership.tsx'
 
 /**
  * A node style implementation that creates shapes based on a given node's type by delegating to GeneralPathNodeStyle.

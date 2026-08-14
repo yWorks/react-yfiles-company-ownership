@@ -6,7 +6,7 @@ import {
   Size
 } from '@yfiles/yfiles'
 import { CustomShapeNodeStyle } from './CustomShapeNodeStyle.ts'
-import { Entity } from '../CompanyOwnership.tsx'
+import type { Entity } from '../CompanyOwnership.tsx'
 
 /**
  * Returns the style of a node based on its type.

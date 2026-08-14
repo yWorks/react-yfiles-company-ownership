@@ -1,10 +1,12 @@
-import { Connection, Entity } from '../CompanyOwnership.tsx'
+import type { Connection, Entity } from '../CompanyOwnership.tsx'
 
 export function stringifyData(data: any): string {
   return typeof data === 'object' ? JSON.stringify(data) : String(data)
 }
 
-export function getNodeClass(level: 'high' | 'low') {
+export function getNodeClass(
+  level: 'high' | 'low'
+): 'yfiles-react-detail-node' | 'yfiles-react-overview-node' {
   return level === 'high' ? 'yfiles-react-detail-node' : 'yfiles-react-overview-node'
 }
 
@@ -22,7 +24,7 @@ export function getHighlightClasses(selected: boolean, hovered: boolean, focused
   return highlights.join(' ')
 }
 
-export function getUserProperties(data: Entity | Connection) {
+export function getUserProperties(data: Entity | Connection): { [p: string]: any } {
   const internalProperties = [
     'id',
     'className',

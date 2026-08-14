@@ -1,11 +1,12 @@
 import './styles/company-ownership-styles.css'
 import './styles/company-ownership-nodes.css'
 import {
-  ComponentType,
-  CSSProperties,
-  Dispatch,
-  PropsWithChildren,
-  SetStateAction,
+  type ComponentType,
+  type CSSProperties,
+  type Dispatch,
+  type JSX,
+  type PropsWithChildren,
+  type SetStateAction,
   useEffect,
   useMemo,
   useState
@@ -13,10 +14,10 @@ import {
 import {
   BridgeCrossingStyle,
   BridgeManager,
-  GraphComponent,
+  type GraphComponent,
   GraphObstacleProvider,
-  GraphViewerInputMode,
-  IGraph,
+  type GraphViewerInputMode,
+  type IGraph,
   GroupPaddingProvider,
   Size
 } from '@yfiles/yfiles'
@@ -31,15 +32,15 @@ import {
   checkLicense,
   checkStylesheetLoaded,
   ContextMenu,
-  ContextMenuItemProvider,
-  EdgeStyle as ConnectionStyle,
+  type ContextMenuItemProvider,
+  type EdgeStyle as ConnectionStyle,
   LicenseError,
-  NodeRenderInfo,
+  type NodeRenderInfo,
   ReactComponentHtmlNodeStyle,
   ReactNodeRendering,
-  RenderContextMenuProps,
+  type RenderContextMenuProps,
   RenderNodeProps as RenderEntityProps,
-  RenderTooltipProps,
+  type RenderTooltipProps,
   Tooltip,
   useGraphSearch,
   useReactNodeRendering,
@@ -51,7 +52,10 @@ import {
   useCompanyOwnershipContextInternal
 } from './CompanyOwnershipProvider.tsx'
 import { initializeGraphManager } from './core/data-loading.ts'
-import { CompanyOwnershipModel, CompanyOwnershipModelInternal } from './CompanyOwnershipModel.ts'
+import type {
+  CompanyOwnershipModel,
+  CompanyOwnershipModelInternal
+} from './CompanyOwnershipModel.ts'
 import { RenderEntity } from './components/RenderEntity.tsx'
 import {
   defaultGraphFitInsets,
@@ -481,7 +485,7 @@ export function CompanyOwnership<
   TEntity extends Entity = UserEntity,
   TConnection extends Connection = UserConnection,
   TNeedle = string
->(props: CompanyOwnershipProps<TEntity, TConnection, TNeedle> & PropsWithChildren) {
+>(props: CompanyOwnershipProps<TEntity, TConnection, TNeedle> & PropsWithChildren): JSX.Element {
   if (!checkLicense()) {
     return (
       <LicenseError
@@ -587,7 +591,7 @@ const CompanyOwnershipCore = withGraphComponent(
     useEffect(() => {
       const hoverItemChangedListener = initializeHover(onItemHover, graphComponent)
 
-      return () => {
+      return (): void => {
         // clean up
         hoverItemChangedListener &&
           (graphComponent.inputMode as GraphViewerInputMode).itemHoverInputMode.removeEventListener(
@@ -602,7 +606,7 @@ const CompanyOwnershipCore = withGraphComponent(
       const currentItemChangedListener = initializeFocus(onItemFocus, graphComponent)
       const selectedItemChangedListener = initializeSelection(onItemSelect, graphComponent)
 
-      return () => {
+      return (): void => {
         // clean up the listeners
         currentItemChangedListener &&
           graphComponent.removeEventListener('current-item-changed', currentItemChangedListener)
@@ -629,7 +633,7 @@ const CompanyOwnershipCore = withGraphComponent(
 
     const graphSearch = useGraphSearch<TEntity, TNeedle>(graphComponent, searchNeedle, onSearch)
     // provide search hits on the companyOwnershipModel
-    companyOwnershipModel.getSearchHits = () => graphSearch.matchingNodes.map(n => n.tag)
+    companyOwnershipModel.getSearchHits = (): Entity[] => graphSearch.matchingNodes.map(n => n.tag)
 
     const maxNodeSize = useMemo(() => ({ width: 400, height: Number.POSITIVE_INFINITY }), [])
 
@@ -690,7 +694,7 @@ function initializeDefaultStyle<TEntity extends Entity>(
   graph.edgeDefaults.style = defaultOwnershipEdgeStyle
 }
 
-function initializeBridges(graphComponent: GraphComponent) {
+function initializeBridges(graphComponent: GraphComponent): void {
   // Configure bridge manager: This visualizes edge crossings in a way that makes
   // it much easier to understand which edge goes where.
   const bridgeManager = new BridgeManager({

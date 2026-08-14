@@ -1,8 +1,8 @@
 import '../styles/company-ownership-tooltip.css'
-import { Connection, Entity } from '../CompanyOwnership.tsx'
+import type { Connection, Entity } from '../CompanyOwnership.tsx'
 import { getUserProperties, stringifyData } from './template-utils.ts'
-import { RenderTooltipProps } from '@yworks/react-yfiles-core'
-import { Fragment } from 'react'
+import type { RenderTooltipProps } from '@yworks/react-yfiles-core'
+import { Fragment, type JSX } from 'react'
 import { useCompanyOwnershipContext } from '../CompanyOwnershipProvider.tsx'
 
 /**
@@ -21,7 +21,7 @@ import { useCompanyOwnershipContext } from '../CompanyOwnershipProvider.tsx'
  */
 export function RenderTooltip<TEntity extends Entity, TConnection extends Connection>({
   data
-}: RenderTooltipProps<TEntity | TConnection>) {
+}: RenderTooltipProps<TEntity | TConnection>): JSX.Element | null {
   const context = useCompanyOwnershipContext()!
 
   if (!data) {

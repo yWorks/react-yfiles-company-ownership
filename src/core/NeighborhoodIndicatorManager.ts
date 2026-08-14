@@ -7,10 +7,10 @@ import {
   IEdge,
   IEdgeStyle,
   ILookupDecorator,
-  IModelItem,
+  type IModelItem,
   INode,
   INodeStyle,
-  IObjectRenderer,
+  type IObjectRenderer,
   LookupDecorator,
   Neighborhood,
   NodeStyleIndicatorRenderer,
@@ -18,7 +18,7 @@ import {
   ShapeNodeStyle,
   TraversalDirection
 } from '@yfiles/yfiles'
-import { HighlightOptions } from '../CompanyOwnership.tsx'
+import type { HighlightOptions } from '../CompanyOwnership.tsx'
 import { neighborhoodHighlightColor } from './defaults.ts'
 
 export class NeighborhoodIndicatorManager extends HighlightIndicatorManager<any> {
@@ -33,7 +33,7 @@ export class NeighborhoodIndicatorManager extends HighlightIndicatorManager<any>
     this.update(highlightOptions)
   }
 
-  update(highlightOptions?: HighlightOptions) {
+  update(highlightOptions?: HighlightOptions): void {
     const neighborhoodColor =
       highlightOptions?.neighborhoodHighlightColor ?? neighborhoodHighlightColor
     const neighborhoodClass = highlightOptions?.neighborhoodHighlightCssClass ?? ''
@@ -114,12 +114,12 @@ export class NeighborhoodIndicatorManager extends HighlightIndicatorManager<any>
     }
   }
 
-  addHighlight(viewItem: IModelItem) {
+  addHighlight(viewItem: IModelItem): void {
     super.items?.add(viewItem)
     this.neighborhoodCollection.add(viewItem)
   }
 
-  clearHighlights() {
+  clearHighlights(): void {
     this.neighborhoodCollection.clear()
     super.items?.clear()
   }

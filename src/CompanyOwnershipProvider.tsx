@@ -1,6 +1,9 @@
-import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
+import { createContext, type JSX, type PropsWithChildren, useContext, useMemo } from 'react'
 import { useGraphComponent, withGraphComponentProvider } from '@yworks/react-yfiles-core'
-import { CompanyOwnershipModel, CompanyOwnershipModelInternal } from './CompanyOwnershipModel.ts'
+import type {
+  CompanyOwnershipModel,
+  CompanyOwnershipModelInternal
+} from './CompanyOwnershipModel.ts'
 import { Graph, ViewportLimitingPolicy } from '@yfiles/yfiles'
 import {
   componentBackgroundColor,
@@ -104,8 +107,8 @@ export function useCompanyOwnershipContext(): CompanyOwnershipModel {
  * }
  * ```
  */
-export const CompanyOwnershipProvider = withGraphComponentProvider(
-  ({ children }: PropsWithChildren) => {
+export const CompanyOwnershipProvider: (props: PropsWithChildren) => JSX.Element =
+  withGraphComponentProvider(({ children }: PropsWithChildren) => {
     const graphComponent = useGraphComponent()
 
     if (!graphComponent) {
@@ -114,8 +117,7 @@ export const CompanyOwnershipProvider = withGraphComponentProvider(
 
     const CompanyOwnership = useMemo(() => {
       const previousModel = graphComponent.htmlElement['companyOwnerhsip'] as
-        | CompanyOwnershipModelInternal
-        | undefined
+        CompanyOwnershipModelInternal | undefined
 
       if (previousModel) {
         return previousModel
@@ -147,5 +149,4 @@ export const CompanyOwnershipProvider = withGraphComponentProvider(
         {children}
       </CompanyOwnershipContext.Provider>
     )
-  }
-)
+  })
